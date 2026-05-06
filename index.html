@@ -8,6 +8,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { overflow: hidden; background: #000; }
     canvas { display: block; }
+
     #hud {
       position: absolute;
       top: 20px;
@@ -15,25 +16,146 @@
       transform: translateX(-50%);
       color: #fff;
       font-family: 'Georgia', serif;
-      font-size: 18px;
       text-shadow: 0 1px 4px rgba(0,0,0,0.8);
       text-align: center;
       pointer-events: none;
     }
     #hud h1 { font-size: 28px; letter-spacing: 3px; font-weight: normal; }
     #hud p  { font-size: 13px; margin-top: 4px; opacity: 0.75; letter-spacing: 1px; }
+
+    /* ── Power meter ─────────────────────────────────────────────────── */
+    #power-wrap {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      user-select: none;
+    }
+    #power-label {
+      color: #fff;
+      font-family: Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      margin-bottom: 7px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    }
+    #power-bar-bg {
+      width: 240px;
+      height: 15px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    #power-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, #4ee04e 0%, #f5d020 55%, #e83030 100%);
+      border-radius: 8px;
+      transition: width 0.05s linear;
+    }
+    #power-hint {
+      color: rgba(255,255,255,0.6);
+      font-family: Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      margin-top: 7px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    /* ── Overlay texts ───────────────────────────────────────────────── */
+    #shot-text {
+      position: absolute;
+      top: 36%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-family: Georgia, serif;
+      font-size: 38px;
+      letter-spacing: 8px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.95);
+      pointer-events: none;
+      opacity: 0;
+    }
+    #dist-text {
+      position: absolute;
+      top: 44%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffe066;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      letter-spacing: 4px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* ── Reset button ────────────────────────────────────────────────── */
+    #reset-btn {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.85);
+      font-family: Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+      cursor: pointer;
+      padding: 9px 26px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 4px;
+      background: rgba(0,0,0,0.35);
+      display: none;
+    }
+    #reset-btn:hover { background: rgba(255,255,255,0.12); }
   </style>
 </head>
 <body>
+
   <div id="hud">
     <h1>GOLF</h1>
     <p>HOLE 1 &nbsp;|&nbsp; PAR 4 &nbsp;|&nbsp; 380 YDS</p>
   </div>
 
-  <!-- Three.js r158 via CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <div id="power-wrap">
+    <div id="power-label">POWER</div>
+    <div id="power-bar-bg"><div id="power-bar-fill"></div></div>
+    <div id="power-hint">HOLD SPACE OR CLICK &nbsp;·&nbsp; RELEASE TO SWING</div>
+  </div>
 
+  <div id="shot-text">FORE!</div>
+  <div id="dist-text"></div>
+  <button id="reset-btn">&#8635;&nbsp; RESET (R)</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
+  // ─── Physics constants ────────────────────────────────────────────────────────
+  const BALL_RADIUS        = 0.215;
+  const GRAVITY            = -22;        // units/s²
+  const BOUNCE_RESTITUTION = 0.38;       // energy kept on bounce
+  const ROLL_FRICTION      = 0.963;      // per-frame velocity multiplier base
+  const STOP_SPEED         = 0.10;       // units/s to stop rolling
+  const MAX_POWER_TIME     = 2.2;        // seconds for full bar
+  const MIN_LAUNCH_SPEED   = 16;
+  const MAX_LAUNCH_SPEED   = 74;
+  const TEE_HEIGHT         = BALL_RADIUS + 0.115; // ball y on tee peg
+
+  // ─── Game state ───────────────────────────────────────────────────────────────
+  // 'idle' | 'charging' | 'flying' | 'rolling' | 'stopped'
+  let state       = 'idle';
+  let chargeStart = 0;
+  let bounceCount = 0;
+  const vel = new THREE.Vector3();
+
+  // Smooth camera tracking
+  const camCurrent  = new THREE.Vector3(0, 3.5, 10);
+  const lookCurrent = new THREE.Vector3(0, 0.5, -10);
+
   // ─── Renderer ────────────────────────────────────────────────────────────────
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -48,112 +170,84 @@
   // ─── Scene ───────────────────────────────────────────────────────────────────
   const scene = new THREE.Scene();
 
-  // ─── Sky gradient via a large sphere with vertex colors ──────────────────────
+  // ─── Sky gradient sphere ──────────────────────────────────────────────────────
   const skyGeo = new THREE.SphereGeometry(500, 32, 32);
   skyGeo.deleteAttribute('normal');
   skyGeo.deleteAttribute('uv');
 
-  // Assign per-vertex colors to create a vertical gradient
-  const skyColors = [];
-  const topColor    = new THREE.Color(0x1a6ebe);   // deep blue
-  const horizonColor = new THREE.Color(0x9ecfe8);  // light hazy blue
-  const bottomColor  = new THREE.Color(0x7ab87a);  // faint green tint near ground
+  const topColor     = new THREE.Color(0x1a6ebe);
+  const horizonColor = new THREE.Color(0x9ecfe8);
+  const bottomColor  = new THREE.Color(0x7ab87a);
+  const skyColors    = [];
+  const posArr       = skyGeo.attributes.position;
 
-  const posArr = skyGeo.attributes.position;
   for (let i = 0; i < posArr.count; i++) {
-    const y = posArr.getY(i);
-    // y ranges roughly from -500 to +500
-    const t = THREE.MathUtils.clamp((y + 500) / 1000, 0, 1); // 0=bottom, 1=top
+    const t = THREE.MathUtils.clamp((posArr.getY(i) + 500) / 1000, 0, 1);
     const c = new THREE.Color();
-    if (t < 0.15) {
-      c.lerpColors(bottomColor, horizonColor, t / 0.15);
-    } else {
-      c.lerpColors(horizonColor, topColor, (t - 0.15) / 0.85);
-    }
+    if (t < 0.15) c.lerpColors(bottomColor, horizonColor, t / 0.15);
+    else           c.lerpColors(horizonColor, topColor, (t - 0.15) / 0.85);
     skyColors.push(c.r, c.g, c.b);
   }
   skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(skyColors, 3));
-
-  const skyMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide });
-  scene.add(new THREE.Mesh(skyGeo, skyMat));
+  scene.add(new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
 
   // ─── Lighting ────────────────────────────────────────────────────────────────
-  const ambient = new THREE.AmbientLight(0xfff4e0, 0.55);
-  scene.add(ambient);
+  scene.add(new THREE.AmbientLight(0xfff4e0, 0.55));
 
   const sun = new THREE.DirectionalLight(0xfff8d6, 1.4);
   sun.position.set(80, 120, 60);
   sun.castShadow = true;
-  sun.shadow.camera.left   = -80;
-  sun.shadow.camera.right  =  80;
-  sun.shadow.camera.top    =  80;
-  sun.shadow.camera.bottom = -80;
+  sun.shadow.camera.left   = -100;
+  sun.shadow.camera.right  =  100;
+  sun.shadow.camera.top    =  100;
+  sun.shadow.camera.bottom = -100;
   sun.shadow.camera.near   =  0.5;
-  sun.shadow.camera.far    =  400;
+  sun.shadow.camera.far    =  500;
   sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.bias = -0.0003;
   scene.add(sun);
 
-  // Soft fill light from the other side
   const fill = new THREE.DirectionalLight(0xb0d8ff, 0.35);
   fill.position.set(-60, 40, -40);
   scene.add(fill);
 
   // ─── Procedural grass texture ─────────────────────────────────────────────────
-  // Build a 512×512 canvas texture using value noise for subtle colour variation
   function buildGrassTexture(size) {
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = size;
     const ctx = canvas.getContext('2d');
 
-    // Simple pseudo-random hash
     function hash(x, y) {
       const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
       return n - Math.floor(n);
     }
-    // Value noise: bilinear blend of 4 corner hashes
     function noise(x, y) {
       const ix = Math.floor(x), iy = Math.floor(y);
       const fx = x - ix, fy = y - iy;
-      const ux = fx * fx * (3 - 2 * fx);
-      const uy = fy * fy * (3 - 2 * fy);
-      const a = hash(ix,   iy);
-      const b = hash(ix+1, iy);
-      const c = hash(ix,   iy+1);
-      const d = hash(ix+1, iy+1);
-      return a + (b-a)*ux + (c-a)*uy + (b-a+a-b-c+d)*ux*uy; // bilinear
+      const ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy);
+      const a = hash(ix,   iy), b = hash(ix+1, iy);
+      const c = hash(ix,   iy+1), d = hash(ix+1, iy+1);
+      return a + (b-a)*ux + (c-a)*uy + (b-a+a-b-c+d)*ux*uy;
     }
-    // Layered octaves for a more natural look
     function fbm(x, y) {
       let v = 0, amp = 0.5, freq = 1;
-      for (let o = 0; o < 5; o++) {
-        v += amp * noise(x * freq, y * freq);
-        amp  *= 0.5;
-        freq *= 2.1;
-      }
+      for (let o = 0; o < 5; o++) { v += amp * noise(x*freq, y*freq); amp *= 0.5; freq *= 2.1; }
       return v;
     }
 
-    const imageData = ctx.createImageData(size, size);
-    const data = imageData.data;
+    const img = ctx.createImageData(size, size);
     for (let py = 0; py < size; py++) {
       for (let px = 0; px < size; px++) {
-        const nx = px / size * 8;
-        const ny = py / size * 8;
-        const n  = fbm(nx, ny);          // 0..1 roughly
-        // Base fairway green, modulate brightness by noise
-        const base = 0.30 + n * 0.45;   // 0.30–0.75
-        const r = Math.round(base * 62);
-        const g = Math.round(base * 130);
-        const b = Math.round(base * 55);
+        const n = fbm(px / size * 8, py / size * 8);
+        const b = 0.30 + n * 0.45;
         const i = (py * size + px) * 4;
-        data[i]   = r;
-        data[i+1] = g;
-        data[i+2] = b;
-        data[i+3] = 255;
+        img.data[i]   = Math.round(b * 62);
+        img.data[i+1] = Math.round(b * 130);
+        img.data[i+2] = Math.round(b * 55);
+        img.data[i+3] = 255;
       }
     }
-    ctx.putImageData(imageData, 0, 0);
+    ctx.putImageData(img, 0, 0);
 
     const tex = new THREE.CanvasTexture(canvas);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
@@ -162,126 +256,313 @@
     return tex;
   }
 
-  // ─── Fairway plane ───────────────────────────────────────────────────────────
-  const fairwayGeo = new THREE.PlaneGeometry(300, 600, 1, 1);
-  const grassTex   = buildGrassTexture(512);
-  const fairwayMat = new THREE.MeshLambertMaterial({ map: grassTex });
-  const fairway    = new THREE.Mesh(fairwayGeo, fairwayMat);
+  // ─── Fairway ─────────────────────────────────────────────────────────────────
+  const fairway = new THREE.Mesh(
+    new THREE.PlaneGeometry(300, 600),
+    new THREE.MeshLambertMaterial({ map: buildGrassTexture(512) })
+  );
   fairway.rotation.x = -Math.PI / 2;
-  fairway.position.set(0, 0, -150);   // extend forward away from camera
+  fairway.position.set(0, 0, -150);
   fairway.receiveShadow = true;
   scene.add(fairway);
 
-  // Subtle rough / fringe on the sides — darker strips
-  function addRough(x, z) {
-    const roughGeo = new THREE.PlaneGeometry(60, 600, 1, 1);
-    const roughMat = new THREE.MeshLambertMaterial({ color: 0x2d6a2d });
-    const rough    = new THREE.Mesh(roughGeo, roughMat);
-    rough.rotation.x = -Math.PI / 2;
-    rough.position.set(x, -0.01, z);
-    rough.receiveShadow = true;
-    scene.add(rough);
+  function addRough(x) {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(60, 600),
+      new THREE.MeshLambertMaterial({ color: 0x2d6a2d })
+    );
+    m.rotation.x = -Math.PI / 2;
+    m.position.set(x, -0.01, -150);
+    m.receiveShadow = true;
+    scene.add(m);
   }
-  addRough(-105, -150);
-  addRough( 105, -150);
+  addRough(-105);
+  addRough( 105);
 
-  // ─── Tee marker ──────────────────────────────────────────────────────────────
-  // Small rectangular tee box with a slightly lighter colour
-  const teeBoxGeo = new THREE.PlaneGeometry(6, 4);
-  const teeBoxMat = new THREE.MeshLambertMaterial({ color: 0x5db85d });
-  const teeBox    = new THREE.Mesh(teeBoxGeo, teeBoxMat);
+  // ─── Tee box ─────────────────────────────────────────────────────────────────
+  const teeBox = new THREE.Mesh(
+    new THREE.PlaneGeometry(6, 4),
+    new THREE.MeshLambertMaterial({ color: 0x5db85d })
+  );
   teeBox.rotation.x = -Math.PI / 2;
   teeBox.position.set(0, 0.01, 0);
   teeBox.receiveShadow = true;
   scene.add(teeBox);
 
   // ─── Tee peg ─────────────────────────────────────────────────────────────────
-  // Tapered cylinder: narrow at bottom, wider (cup-like) at top
-  const teePegGeo = new THREE.CylinderGeometry(0.05, 0.025, 0.22, 8);
-  const teePegMat = new THREE.MeshLambertMaterial({ color: 0xf5c842 });
-  const teePeg    = new THREE.Mesh(teePegGeo, teePegMat);
+  const teePeg = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.025, 0.22, 8),
+    new THREE.MeshLambertMaterial({ color: 0xf5c842 })
+  );
   teePeg.position.set(0, 0.11, 0);
   teePeg.castShadow = true;
   scene.add(teePeg);
 
   // ─── Golf ball ───────────────────────────────────────────────────────────────
-  const ballGeo = new THREE.SphereGeometry(0.215, 32, 32);
-  const ballMat = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    specular: 0xaaaaaa,
-    shininess: 120,
-  });
-  const ball = new THREE.Mesh(ballGeo, ballMat);
-  ball.position.set(0, 0.33, 0);   // sits on top of the tee peg
+  const ball = new THREE.Mesh(
+    new THREE.SphereGeometry(BALL_RADIUS, 32, 32),
+    new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xaaaaaa, shininess: 120 })
+  );
+  ball.position.set(0, TEE_HEIGHT, 0);
   ball.castShadow = true;
   scene.add(ball);
 
-  // ─── Distant flag / pin ───────────────────────────────────────────────────────
-  const flagDist = -280;
+  // ─── Ball blob shadow ─────────────────────────────────────────────────────────
+  const shadowMat = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    opacity: 0.38,
+    depthWrite: false,
+  });
+  const ballShadow = new THREE.Mesh(new THREE.CircleGeometry(0.5, 24), shadowMat);
+  ballShadow.rotation.x = -Math.PI / 2;
+  ballShadow.position.y = 0.021;
+  scene.add(ballShadow);
 
-  // Pin pole
-  const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 6, 8);
-  const poleMat = new THREE.MeshLambertMaterial({ color: 0xdddddd });
-  const pole    = new THREE.Mesh(poleGeo, poleMat);
-  pole.position.set(0, 3, flagDist);
+  // ─── Distant flag / pin ───────────────────────────────────────────────────────
+  const FLAG_Z = -280;
+
+  const pole = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.04, 0.04, 6, 8),
+    new THREE.MeshLambertMaterial({ color: 0xdddddd })
+  );
+  pole.position.set(0, 3, FLAG_Z);
   pole.castShadow = true;
   scene.add(pole);
 
-  // Flag
-  const flagGeo = new THREE.PlaneGeometry(1.5, 0.9);
-  const flagMat = new THREE.MeshLambertMaterial({ color: 0xee2222, side: THREE.DoubleSide });
-  const flag    = new THREE.Mesh(flagGeo, flagMat);
-  flag.position.set(0.75, 5.55, flagDist);
+  const flag = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.5, 0.9),
+    new THREE.MeshLambertMaterial({ color: 0xee2222, side: THREE.DoubleSide })
+  );
+  flag.position.set(0.75, 5.55, FLAG_Z);
   scene.add(flag);
 
-  // Cup circle on the green
-  const cupGeo = new THREE.CircleGeometry(0.25, 32);
-  const cupMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
-  const cup    = new THREE.Mesh(cupGeo, cupMat);
+  const cup = new THREE.Mesh(
+    new THREE.CircleGeometry(0.25, 32),
+    new THREE.MeshBasicMaterial({ color: 0x111111 })
+  );
   cup.rotation.x = -Math.PI / 2;
-  cup.position.set(0, 0.015, flagDist);
+  cup.position.set(0, 0.015, FLAG_Z);
   scene.add(cup);
 
-  // ─── Gentle rolling hills on the horizon ─────────────────────────────────────
-  function addHillStrip(z, width, height, color) {
-    const geo = new THREE.CylinderGeometry(0, width * 0.5, height, 6, 1);
+  // ─── Horizon hills ───────────────────────────────────────────────────────────
+  function addHills(z, w, h, color) {
+    const geo = new THREE.CylinderGeometry(0, w * 0.5, h, 6);
     const mat = new THREE.MeshLambertMaterial({ color });
     for (let x = -200; x <= 200; x += 55 + Math.random() * 30) {
       const m = new THREE.Mesh(geo, mat);
-      m.position.set(x, height * 0.5 - 0.5, z);
+      m.position.set(x, h * 0.5 - 0.5, z);
       scene.add(m);
     }
   }
-  addHillStrip(-310, 120, 18, 0x2d7a2d);
-  addHillStrip(-280, 90,  12, 0x3a8c3a);
-  addHillStrip(-260, 70,  8,  0x4a9e4a);
+  addHills(-310, 120, 18, 0x2d7a2d);
+  addHills(-280,  90, 12, 0x3a8c3a);
+  addHills(-260,  70,  8, 0x4a9e4a);
 
   // ─── Camera ──────────────────────────────────────────────────────────────────
   const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
-  // Third-person: behind and above the ball, looking toward the flag
-  camera.position.set(0, 3.5, 10);
-  camera.lookAt(ball.position.clone().add(new THREE.Vector3(0, 0.3, -10)));
+  camera.position.copy(camCurrent);
+  camera.lookAt(lookCurrent);
 
-  // ─── Resize handler ──────────────────────────────────────────────────────────
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // ─── Subtle flag & scene animation ───────────────────────────────────────────
+  // ─── UI elements ─────────────────────────────────────────────────────────────
+  const powerWrap = document.getElementById('power-wrap');
+  const powerFill = document.getElementById('power-bar-fill');
+  const shotText  = document.getElementById('shot-text');
+  const distText  = document.getElementById('dist-text');
+  const resetBtn  = document.getElementById('reset-btn');
+
+  function flashText(el, msg, duration = 1400) {
+    el.textContent = msg;
+    el.style.transition = 'none';
+    el.style.opacity    = '1';
+    setTimeout(() => {
+      el.style.transition = 'opacity 0.9s';
+      el.style.opacity    = '0';
+    }, duration);
+  }
+
+  function showStopped() {
+    // Convert scene units to approximate yards (1 unit ≈ 1.15 yds)
+    const dist = Math.round(Math.abs(ball.position.z) * 1.15);
+    flashText(distText, dist + ' YDS', 5000);
+    resetBtn.style.display = 'block';
+  }
+
+  function reset() {
+    ball.position.set(0, TEE_HEIGHT, 0);
+    ball.rotation.set(0, 0, 0);
+    vel.set(0, 0, 0);
+    bounceCount = 0;
+    state = 'idle';
+    teePeg.visible = true;
+
+    distText.style.transition = 'none';
+    distText.style.opacity    = '0';
+    resetBtn.style.display    = 'none';
+    powerWrap.style.display   = 'block';
+
+    // Snap camera back behind tee
+    camCurrent.set(0, 3.5, 10);
+    lookCurrent.set(0, 0.5, -10);
+
+    updateBlobShadow();
+  }
+
+  // ─── Input ───────────────────────────────────────────────────────────────────
+  function startCharge() {
+    if (state !== 'idle') return;
+    state       = 'charging';
+    chargeStart = performance.now() / 1000;
+  }
+
+  function releaseSwing() {
+    if (state !== 'charging') return;
+
+    const elapsed = performance.now() / 1000 - chargeStart;
+    const power   = Math.min(1, elapsed / MAX_POWER_TIME);
+
+    if (power < 0.04) { state = 'idle'; return; } // accidental tap — ignore
+
+    const speed = THREE.MathUtils.lerp(MIN_LAUNCH_SPEED, MAX_LAUNCH_SPEED, power);
+    // Launch angle: ~30° for all powers, slightly flatter at max
+    const angle = THREE.MathUtils.lerp(0.54, 0.48, power);
+    vel.set(0, speed * Math.sin(angle), -speed * Math.cos(angle));
+
+    bounceCount = 0;
+    state       = 'flying';
+
+    teePeg.visible = false;
+    powerWrap.style.display = 'none';
+    flashText(shotText, 'FORE!', 700);
+  }
+
+  window.addEventListener('keydown', e => {
+    if (e.code === 'Space' && !e.repeat) { e.preventDefault(); startCharge(); }
+    if (e.code === 'KeyR') reset();
+  });
+  window.addEventListener('keyup', e => {
+    if (e.code === 'Space') releaseSwing();
+  });
+  renderer.domElement.addEventListener('mousedown', e => { if (e.button === 0) startCharge(); });
+  window.addEventListener('mouseup', e => { if (e.button === 0) releaseSwing(); });
+  resetBtn.addEventListener('click', reset);
+
+  // ─── Blob shadow helper ───────────────────────────────────────────────────────
+  function updateBlobShadow() {
+    ballShadow.position.x = ball.position.x;
+    ballShadow.position.z = ball.position.z;
+    const height   = Math.max(0, ball.position.y - BALL_RADIUS);
+    const scale    = Math.max(0.12, 1.0 - height * 0.022);
+    const opacity  = Math.max(0.03, 0.38 - height * 0.009);
+    ballShadow.scale.setScalar(scale);
+    shadowMat.opacity = opacity;
+  }
+
+  // ─── Physics step ─────────────────────────────────────────────────────────────
+  function stepPhysics(dt) {
+    if (state !== 'flying' && state !== 'rolling') return;
+
+    if (state === 'flying') {
+      vel.y += GRAVITY * dt;
+      ball.position.addScaledVector(vel, dt);
+
+      // Forward spin: rotate around X proportional to Z velocity
+      ball.rotation.x -= vel.z * dt * 3.5;
+
+      if (ball.position.y <= BALL_RADIUS) {
+        ball.position.y = BALL_RADIUS;
+        if (Math.abs(vel.y) > 1.8 && bounceCount < 3) {
+          vel.y *= -BOUNCE_RESTITUTION;
+          vel.z *=  0.85;
+          vel.x *=  0.80;
+          bounceCount++;
+        } else {
+          vel.y = 0;
+          state = 'rolling';
+        }
+      }
+    }
+
+    if (state === 'rolling') {
+      ball.position.addScaledVector(vel, dt);
+      ball.rotation.x -= vel.z * dt * 3.5;
+
+      // Frame-rate independent friction: decay per frame normalised to 60fps
+      const friction = Math.pow(ROLL_FRICTION, dt * 60);
+      vel.x *= friction;
+      vel.z *= friction;
+      vel.y  = 0;
+      ball.position.y = BALL_RADIUS;
+
+      if (Math.sqrt(vel.x * vel.x + vel.z * vel.z) < STOP_SPEED) {
+        vel.set(0, 0, 0);
+        state = 'stopped';
+        showStopped();
+      }
+    }
+
+    updateBlobShadow();
+  }
+
+  // ─── Camera follow ────────────────────────────────────────────────────────────
+  function updateCamera(dt, t) {
+    let targetPos, targetLook, lerpK;
+
+    if (state === 'idle' || state === 'charging') {
+      // Stay behind tee with gentle vertical bob
+      const bob = Math.sin(t * 0.4) * 0.04;
+      targetPos  = new THREE.Vector3(0, 3.5 + bob, 10);
+      targetLook = new THREE.Vector3(0, 0.5, -10);
+      lerpK = 3;
+    } else if (state === 'stopped') {
+      // Settle low behind ball
+      targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 3.2, ball.position.z + 10);
+      targetLook = new THREE.Vector3(ball.position.x, ball.position.y + 0.3, ball.position.z - 12);
+      lerpK = 1.5;
+    } else {
+      // Follow ball during flight and roll
+      targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 4.8, ball.position.z + 14);
+      targetLook = new THREE.Vector3(ball.position.x, ball.position.y - 0.5, ball.position.z - 18);
+      lerpK = 4.5;
+    }
+
+    camCurrent.lerp(targetPos, dt * lerpK);
+    lookCurrent.lerp(targetLook, dt * lerpK);
+    camera.position.copy(camCurrent);
+    camera.lookAt(lookCurrent);
+  }
+
+  // ─── Power bar ───────────────────────────────────────────────────────────────
+  function updatePowerBar() {
+    if (state === 'charging') {
+      const elapsed = performance.now() / 1000 - chargeStart;
+      powerFill.style.width = Math.min(100, (elapsed / MAX_POWER_TIME) * 100) + '%';
+    } else if (state === 'idle') {
+      powerFill.style.width = '0%';
+    }
+  }
+
+  // ─── Main loop ────────────────────────────────────────────────────────────────
   const clock = new THREE.Clock();
 
   function animate() {
     requestAnimationFrame(animate);
-    const t = clock.getElapsedTime();
+    const dt = Math.min(clock.getDelta(), 0.05); // cap at 50ms to avoid spiral
+    const t  = clock.elapsedTime;
+
+    stepPhysics(dt);
+    updateCamera(dt, t);
+    updatePowerBar();
 
     // Gentle flag wave
-    flag.rotation.y = Math.sin(t * 2.5) * 0.15;
-    flag.position.x = 0.75 + Math.sin(t * 2.5) * 0.08;
-
-    // Very subtle camera bob for liveliness
-    camera.position.y = 3.5 + Math.sin(t * 0.4) * 0.04;
+    flag.rotation.y  = Math.sin(t * 2.5) * 0.15;
+    flag.position.x  = 0.75 + Math.sin(t * 2.5) * 0.08;
 
     renderer.render(scene, camera);
   }
