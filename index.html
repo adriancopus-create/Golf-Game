@@ -185,6 +185,89 @@
       opacity: 0.45;
       font-size: 9px;
     }
+
+    /* ── Stroke counter ──────────────────────────────────────────────────── */
+    #stroke-counter {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      color: rgba(255,255,255,0.80);
+      font-family: Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+      pointer-events: none;
+    }
+
+    /* ── Scorecard overlay ───────────────────────────────────────────────── */
+    #scorecard-overlay {
+      position: absolute; inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.72);
+      z-index: 100;
+    }
+    #scorecard-box {
+      background: rgba(10,26,10,0.97);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 6px;
+      padding: 28px 32px 24px;
+      min-width: 340px;
+      font-family: Georgia, serif;
+      color: rgba(255,255,255,0.85);
+    }
+    #scorecard-title {
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 6px;
+      margin-bottom: 20px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+    }
+    #scorecard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+    #scorecard-table th {
+      color: rgba(255,255,255,0.45);
+      font-size: 10px;
+      letter-spacing: 3px;
+      padding: 0 8px 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    #scorecard-table td {
+      padding: 5px 8px;
+      text-align: center;
+    }
+    #scorecard-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+    .sc-eagle  { color: #f5d020; }
+    .sc-birdie { color: #5ab4f5; }
+    .sc-par    { color: rgba(255,255,255,0.85); }
+    .sc-bogey  { color: #f5a623; }
+    .sc-double { color: #e87030; }
+    .sc-worse  { color: #e84040; }
+    .sc-future { color: rgba(255,255,255,0.25); }
+    .sc-total  { border-top: 1px solid rgba(255,255,255,0.18);
+                 color: rgba(255,255,255,0.9); font-size: 13px; }
+    #scorecard-buttons {
+      margin-top: 22px;
+      text-align: center;
+    }
+    #next-hole-btn, #play-again-btn {
+      padding: 10px 28px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 4px;
+      color: rgba(255,255,255,0.90);
+      font-family: Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      cursor: pointer;
+    }
+    #next-hole-btn:hover, #play-again-btn:hover { background: rgba(255,255,255,0.16); }
   </style>
 </head>
 <body>
@@ -207,6 +290,25 @@
   <div id="minimap-wrap">
     <div id="minimap-label">HOLE 1</div>
     <canvas id="minimap" width="120" height="160"></canvas>
+  </div>
+
+  <div id="stroke-counter"></div>
+
+  <div id="scorecard-overlay">
+    <div id="scorecard-box">
+      <div id="scorecard-title">SCORECARD</div>
+      <table id="scorecard-table">
+        <thead>
+          <tr><th>HOLE</th><th>PAR</th><th>YDS</th><th>SCORE</th><th>+/-</th></tr>
+        </thead>
+        <tbody id="scorecard-body"></tbody>
+        <tfoot id="scorecard-foot"></tfoot>
+      </table>
+      <div id="scorecard-buttons">
+        <button id="next-hole-btn">NEXT HOLE &rarr;</button>
+        <button id="play-again-btn" style="display:none">PLAY AGAIN</button>
+      </div>
+    </div>
   </div>
 
   <div id="club-selector">
@@ -246,6 +348,19 @@
     rough:   { flanking: 22 },
   };
 
+  // ─── 9-hole course data ───────────────────────────────────────────────────────
+  const COURSE = [
+    { par:3, yardage:155, name:'MEADOW LANE'  },
+    { par:4, yardage:320, name:'ELM RIDGE'    },
+    { par:5, yardage:480, name:'OAK VALLEY'   },
+    { par:3, yardage:135, name:'PINE HOLLOW'  },
+    { par:4, yardage:350, name:'BIRCH TRAIL'  },
+    { par:4, yardage:295, name:'WILLOW BEND'  },
+    { par:3, yardage:175, name:'CEDAR POINT'  },
+    { par:5, yardage:520, name:'MAPLE GROVE'  },
+    { par:4, yardage:380, name:'CHERRY HILL'  },
+  ];
+
   // ─── Game state ───────────────────────────────────────────────────────────────
   let state          = 'idle';
   let chargeStart    = 0;
@@ -263,6 +378,13 @@
   const keysHeld    = new Set();
   let isDraggingAim = false;
   let aimDragLastX  = 0;
+
+  // ─── Scoring state ────────────────────────────────────────────────────────────
+  let currentHoleIdx = 0;
+  let strokeCount    = 0;
+  const scores       = [];
+  let sinkTimer      = 0;
+  let sinkStartY     = 0;
 
   // ─── Renderer ────────────────────────────────────────────────────────────────
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -461,6 +583,25 @@
   ballShadow.position.y = 0.021;
   scene.add(ballShadow);
 
+  // ─── Particle system ─────────────────────────────────────────────────────────
+  const N_PARTICLES = 50;
+  const partPosBuf  = new Float32Array(N_PARTICLES * 3);
+  const partColBuf  = new Float32Array(N_PARTICLES * 3);
+  const partGeo     = new THREE.BufferGeometry();
+  partGeo.setAttribute('position', new THREE.BufferAttribute(partPosBuf, 3));
+  partGeo.setAttribute('color',    new THREE.BufferAttribute(partColBuf, 3));
+  const partMat = new THREE.PointsMaterial({
+    size: 0.38, vertexColors: true,
+    transparent: true, opacity: 1.0,
+    sizeAttenuation: true, depthWrite: false,
+  });
+  const particles = new THREE.Points(partGeo, partMat);
+  particles.visible = false;
+  scene.add(particles);
+  const partVelArr = Array.from({ length: N_PARTICLES }, () => new THREE.Vector3());
+  let partActive = false, partTime = 0;
+  const PART_LIFE = 2.5;
+
   // ─── Aim line (dashed, on ground) ────────────────────────────────────────────
   const AIM_PTS = 22;
   const aimPosBuf = new Float32Array(AIM_PTS * 3);
@@ -526,8 +667,9 @@
   const shotText  = document.getElementById('shot-text');
   const distText  = document.getElementById('dist-text');
   const resetBtn  = document.getElementById('reset-btn');
-  const mmCanvas  = document.getElementById('minimap');
-  const mmCtx     = mmCanvas.getContext('2d');
+  const mmCanvas       = document.getElementById('minimap');
+  const mmCtx          = mmCanvas.getContext('2d');
+  const strokeCounterEl = document.getElementById('stroke-counter');
 
   // ─── Club logic ──────────────────────────────────────────────────────────────
   function isOnGreen() {
@@ -575,7 +717,6 @@
     flashText(distText, dist + ' YDS', 5000);
     resetBtn.style.display = 'block';
     updateClubSelector();
-    // Auto-resume idle so player can putt/chip from where ball lies
     setTimeout(() => {
       if (state === 'stopped') {
         state = 'idle';
@@ -585,25 +726,8 @@
   }
 
   function reset() {
-    ball.position.set(0, BALL_RADIUS + 0.115, 0);
-    ball.rotation.set(0, 0, 0);
-    vel.set(0, 0, 0);
-    bounceCount    = 0;
-    aimAngle       = 0;
-    state          = 'idle';
-    teePeg.visible = true;
-    currentClub    = 'driver';
-
-    distText.style.transition = 'none';
-    distText.style.opacity    = '0';
-    resetBtn.style.display    = 'none';
-    powerWrap.style.display   = 'block';
-
-    camCurrent.set(0, 3.5, 10);
-    lookCurrent.set(0, 0.5, -10);
-
-    updateClubSelector();
-    updateBlobShadow();
+    if (state === 'sinking' || state === 'holed') return;
+    resetBallToTee();
   }
 
   // ─── Input ───────────────────────────────────────────────────────────────────
@@ -629,6 +753,8 @@
     vel.set(dirX * hSpeed, vSpeed, dirZ * hSpeed);
     flightAimAngle = aimAngle;
 
+    strokeCount++;
+    updateStrokeCounter();
     bounceCount = 0;
     state       = 'flying';
     teePeg.visible       = false;
@@ -725,7 +851,7 @@
 
   // ─── Aim line update ─────────────────────────────────────────────────────────
   function updateAimVisuals() {
-    const vis = state === 'idle' || state === 'charging';
+    const vis = (state === 'idle' || state === 'charging');
     aimLine.visible       = vis;
     aimArrowGroup.visible = vis;
     arcLine.visible       = vis;
@@ -762,20 +888,202 @@
     arcLineGeo.setDrawRange(0, cnt);
   }
 
+  // ─── Scoring helpers ─────────────────────────────────────────────────────────
+  function getDiffLabel(strokes, par) {
+    const d = strokes - par;
+    if (strokes === 1) return 'HOLE IN ONE!';
+    if (d <= -2)       return 'EAGLE';
+    if (d === -1)      return 'BIRDIE';
+    if (d ===  0)      return 'PAR';
+    if (d ===  1)      return 'BOGEY';
+    if (d ===  2)      return 'DOUBLE BOGEY';
+    return '+' + d;
+  }
+
+  function diffClass(strokes, par) {
+    const d = strokes - par;
+    if (strokes === 1 || d <= -2) return 'sc-eagle';
+    if (d === -1) return 'sc-birdie';
+    if (d ===  0) return 'sc-par';
+    if (d ===  1) return 'sc-bogey';
+    if (d ===  2) return 'sc-double';
+    return 'sc-worse';
+  }
+
+  function formatDiff(d) {
+    if (d === 0) return 'E';
+    return (d > 0 ? '+' : '') + d;
+  }
+
+  function updateStrokeCounter() {
+    strokeCounterEl.textContent = strokeCount > 0 ? 'STROKES: ' + strokeCount : '';
+  }
+
+  function updateHUD() {
+    const h = COURSE[currentHoleIdx];
+    document.querySelector('#hud h1').textContent = h.name;
+    document.querySelector('#hud p').textContent  =
+      'HOLE ' + (currentHoleIdx + 1) + '  ·  PAR ' + h.par + '  ·  ' + h.yardage + ' YDS';
+  }
+
+  function updateMinimapLabel() {
+    document.getElementById('minimap-label').textContent = 'HOLE ' + (currentHoleIdx + 1);
+  }
+
+  function triggerParticles() {
+    const cx = HOLE.flag.x, cy = HOLE.green.elevation, cz = HOLE.flag.z;
+    for (let i = 0; i < N_PARTICLES; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = 2 + Math.random() * 6;
+      partVelArr[i].set(Math.cos(a) * s * 0.7, 3 + Math.random() * 9, Math.sin(a) * s * 0.7);
+      partPosBuf[i*3] = cx; partPosBuf[i*3+1] = cy; partPosBuf[i*3+2] = cz;
+      const c = new THREE.Color().setHSL(Math.random(), 1.0, 0.60);
+      partColBuf[i*3] = c.r; partColBuf[i*3+1] = c.g; partColBuf[i*3+2] = c.b;
+    }
+    partGeo.attributes.position.needsUpdate = true;
+    partGeo.attributes.color.needsUpdate    = true;
+    partActive = true; partTime = 0;
+    particles.visible = true; partMat.opacity = 1.0;
+  }
+
+  function updateParticles(dt) {
+    if (!partActive) return;
+    partTime += dt;
+    if (partTime > PART_LIFE) { partActive = false; particles.visible = false; return; }
+    partMat.opacity = Math.min(1.0, Math.max(0, 1 - (partTime - (PART_LIFE - 0.8)) / 0.8));
+    for (let i = 0; i < N_PARTICLES; i++) {
+      partVelArr[i].y += GRAVITY * 0.45 * dt;
+      partPosBuf[i*3]   += partVelArr[i].x * dt;
+      partPosBuf[i*3+1] += partVelArr[i].y * dt;
+      partPosBuf[i*3+2] += partVelArr[i].z * dt;
+      if (partPosBuf[i*3+1] < HOLE.green.elevation + 0.05) {
+        partPosBuf[i*3+1] = HOLE.green.elevation + 0.05;
+        partVelArr[i].y *= -0.3;
+      }
+    }
+    partGeo.attributes.position.needsUpdate = true;
+  }
+
+  function holeBall() {
+    scores[currentHoleIdx] = strokeCount;
+    sinkStartY = ball.position.y;
+    sinkTimer  = 0;
+    state      = 'sinking';
+    vel.set(0, 0, 0);
+    powerWrap.style.display = 'none';
+    resetBtn.style.display  = 'none';
+    triggerParticles();
+    flashText(shotText, getDiffLabel(strokeCount, COURSE[currentHoleIdx].par), 2200);
+  }
+
+  function showScorecard() {
+    const tbody = document.getElementById('scorecard-body');
+    const tfoot = document.getElementById('scorecard-foot');
+    tbody.innerHTML = '';
+    let totalPar = 0, totalStrokes = 0;
+    for (let i = 0; i < COURSE.length; i++) {
+      const h = COURSE[i], s = scores[i];
+      const tr = document.createElement('tr');
+      totalPar += h.par;
+      if (s !== undefined) {
+        totalStrokes += s;
+        tr.className = diffClass(s, h.par);
+        tr.innerHTML = '<td>' + (i+1) + '</td><td>' + h.par + '</td><td>' + h.yardage +
+          '</td><td>' + s + '</td><td>' + formatDiff(s - h.par) + '</td>';
+      } else {
+        tr.className = 'sc-future';
+        tr.innerHTML = '<td>' + (i+1) + '</td><td>' + h.par + '</td><td>' + h.yardage +
+          '</td><td>-</td><td></td>';
+      }
+      tbody.appendChild(tr);
+    }
+    const isLast = currentHoleIdx >= COURSE.length - 1;
+    const cumDiff = scores.length > 0 ? formatDiff(totalStrokes - totalPar) : '';
+    tfoot.innerHTML = '<tr class="sc-total"><td colspan="3">TOTAL</td><td>' +
+      (totalStrokes || '-') + '</td><td>' + cumDiff + '</td></tr>';
+    document.getElementById('scorecard-title').textContent =
+      isLast ? 'ROUND COMPLETE' : 'HOLE ' + (currentHoleIdx + 1) + ' COMPLETE';
+    document.getElementById('next-hole-btn').style.display    = isLast ? 'none'         : 'inline-block';
+    document.getElementById('play-again-btn').style.display   = isLast ? 'inline-block' : 'none';
+    document.getElementById('scorecard-overlay').style.display = 'flex';
+    strokeCounterEl.style.display = 'none';
+  }
+
+  function hideScorecard() {
+    document.getElementById('scorecard-overlay').style.display = 'none';
+  }
+
+  function resetBallToTee() {
+    ball.visible = true;
+    ball.position.set(0, BALL_RADIUS + 0.115, 0);
+    ball.rotation.set(0, 0, 0);
+    ball.scale.setScalar(1);
+    vel.set(0, 0, 0);
+    bounceCount = 0; aimAngle = 0;
+    state = 'idle';
+    teePeg.visible = true; currentClub = 'driver';
+    distText.style.transition = 'none'; distText.style.opacity = '0';
+    resetBtn.style.display  = 'none';
+    powerWrap.style.display = 'block';
+    camCurrent.set(0, 3.5, 10); lookCurrent.set(0, 0.5, -10);
+    updateClubSelector(); updateBlobShadow(); updateStrokeCounter();
+    strokeCounterEl.style.display = 'block';
+  }
+
+  function advanceHole() {
+    hideScorecard();
+    currentHoleIdx++;
+    strokeCount = 0;
+    resetBallToTee();
+    updateHUD(); updateMinimapLabel();
+  }
+
+  function startNewRound() {
+    hideScorecard();
+    currentHoleIdx = 0; strokeCount = 0; scores.length = 0;
+    resetBallToTee();
+    updateHUD(); updateMinimapLabel();
+  }
+
+  document.getElementById('next-hole-btn').addEventListener('click',  advanceHole);
+  document.getElementById('play-again-btn').addEventListener('click', startNewRound);
+
+  // ─── Cup collision ────────────────────────────────────────────────────────────
+  function checkCupCollision() {
+    const dx = ball.position.x - HOLE.flag.x;
+    const dz = ball.position.z - HOLE.flag.z;
+    return Math.sqrt(dx*dx + dz*dz) < 0.27 && ball.position.y < HOLE.green.elevation + 0.8;
+  }
+
   // ─── Physics ─────────────────────────────────────────────────────────────────
   function stepPhysics(dt) {
+    if (state === 'sinking') {
+      sinkTimer += dt;
+      const progress = Math.min(1, sinkTimer / 0.45);
+      ball.position.y = sinkStartY - progress * 0.6;
+      ball.scale.setScalar(1 - progress * 0.85);
+      if (progress >= 1) {
+        ball.visible = false;
+        ball.scale.setScalar(1);
+        state = 'holed';
+        setTimeout(showScorecard, 350);
+      }
+      updateBlobShadow();
+      return;
+    }
+
     if (state !== 'flying' && state !== 'rolling') return;
 
     if (state === 'flying') {
       vel.y += GRAVITY * dt;
       ball.position.addScaledVector(vel, dt);
-      // Spin perpendicular to horizontal travel direction
       ball.rotation.x -= vel.z * dt * 3.5;
       ball.rotation.z += vel.x * dt * 3.5;
 
       const floorY = getGroundY(ball.position.x, ball.position.z) + BALL_RADIUS;
       if (ball.position.y <= floorY) {
         ball.position.y = floorY;
+        if (checkCupCollision()) { holeBall(); return; }
         if (Math.abs(vel.y) > 1.8 && bounceCount < 3) {
           vel.y *= -BOUNCE_RESTITUTION;
           vel.x *=  0.80;
@@ -789,6 +1097,7 @@
     }
 
     if (state === 'rolling') {
+      if (checkCupCollision()) { holeBall(); return; }
       ball.position.addScaledVector(vel, dt);
       ball.rotation.x -= vel.z * dt * 3.5;
       ball.rotation.z += vel.x * dt * 3.5;
@@ -828,6 +1137,11 @@
       targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 3.2, ball.position.z + 10);
       targetLook = new THREE.Vector3(ball.position.x, ball.position.y + 0.3, ball.position.z - 12);
       lerpK = 1.5;
+    } else if (state === 'sinking' || state === 'holed') {
+      // Cinematic zoom on cup
+      targetPos  = new THREE.Vector3(HOLE.flag.x + 3, HOLE.green.elevation + 4, HOLE.flag.z + 7);
+      targetLook = new THREE.Vector3(HOLE.flag.x, HOLE.green.elevation + 0.3, HOLE.flag.z);
+      lerpK = 2.5;
     } else {
       // During flight: follow from behind based on shot direction
       targetPos  = new THREE.Vector3(
@@ -953,6 +1267,7 @@
     updateCamera(dt, t);
     updatePowerBar();
     updateAimVisuals();
+    updateParticles(dt);
 
     flag.rotation.y = Math.sin(t * 2.5) * 0.15;
     flag.position.x = HOLE.flag.x + 0.6 + Math.sin(t * 2.5) * 0.08;
