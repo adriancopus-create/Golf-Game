@@ -113,13 +113,36 @@
       display: none;
     }
     #reset-btn:hover { background: rgba(255,255,255,0.12); }
+
+    /* ── Mini-map ────────────────────────────────────────────────────── */
+    #minimap-wrap {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      pointer-events: none;
+      user-select: none;
+    }
+    #minimap-label {
+      color: rgba(255,255,255,0.8);
+      font-family: Georgia, serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-align: center;
+      margin-bottom: 4px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    }
+    #minimap {
+      display: block;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 3px;
+    }
   </style>
 </head>
 <body>
 
   <div id="hud">
     <h1>GOLF</h1>
-    <p>HOLE 1 &nbsp;|&nbsp; PAR 4 &nbsp;|&nbsp; 380 YDS</p>
+    <p>HOLE 1 &nbsp;|&nbsp; PAR 3 &nbsp;|&nbsp; 155 YDS</p>
   </div>
 
   <div id="power-wrap">
@@ -132,27 +155,41 @@
   <div id="dist-text"></div>
   <button id="reset-btn">&#8635;&nbsp; RESET (R)</button>
 
+  <div id="minimap-wrap">
+    <div id="minimap-label">HOLE 1</div>
+    <canvas id="minimap" width="120" height="160"></canvas>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
   // ─── Physics constants ────────────────────────────────────────────────────────
   const BALL_RADIUS        = 0.215;
-  const GRAVITY            = -22;        // units/s²
-  const BOUNCE_RESTITUTION = 0.38;       // energy kept on bounce
-  const ROLL_FRICTION      = 0.963;      // per-frame velocity multiplier base
-  const STOP_SPEED         = 0.10;       // units/s to stop rolling
-  const MAX_POWER_TIME     = 2.2;        // seconds for full bar
+  const GRAVITY            = -22;
+  const BOUNCE_RESTITUTION = 0.38;
+  const ROLL_FRICTION      = 0.963;
+  const STOP_SPEED         = 0.10;
+  const MAX_POWER_TIME     = 2.2;
   const MIN_LAUNCH_SPEED   = 16;
   const MAX_LAUNCH_SPEED   = 74;
-  const TEE_HEIGHT         = BALL_RADIUS + 0.115; // ball y on tee peg
+  const TEE_HEIGHT         = BALL_RADIUS + 0.115;
+
+  // ─── Hole layout data ─────────────────────────────────────────────────────────
+  const HOLE = {
+    par: 3,
+    yardage: 155,
+    tee:     { x: 0, z: 0, width: 5, depth: 3 },
+    fairway: { x: 0, centerZ: -65, width: 24, length: 130 },
+    green:   { x: 0, z: -130, radius: 9, elevation: 0.7 },
+    flag:    { x: 0, z: -130, color: 0xee4422 },
+    rough:   { flanking: 22 },
+  };
 
   // ─── Game state ───────────────────────────────────────────────────────────────
-  // 'idle' | 'charging' | 'flying' | 'rolling' | 'stopped'
   let state       = 'idle';
   let chargeStart = 0;
   let bounceCount = 0;
   const vel = new THREE.Vector3();
 
-  // Smooth camera tracking
   const camCurrent  = new THREE.Vector3(0, 3.5, 10);
   const lookCurrent = new THREE.Vector3(0, 0.5, -10);
 
@@ -202,7 +239,7 @@
   sun.shadow.camera.top    =  100;
   sun.shadow.camera.bottom = -100;
   sun.shadow.camera.near   =  0.5;
-  sun.shadow.camera.far    =  500;
+  sun.shadow.camera.far    =  400;
   sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.bias = -0.0003;
   scene.add(sun);
@@ -251,33 +288,46 @@
 
     const tex = new THREE.CanvasTexture(canvas);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(40, 40);
+    tex.repeat.set(6, 20);  // tuned for 24×130 fairway strip
     tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     return tex;
   }
 
-  // ─── Fairway ─────────────────────────────────────────────────────────────────
+  // ─── Fairway strip ───────────────────────────────────────────────────────────
+  const grassTex = buildGrassTexture(512);
+
   const fairway = new THREE.Mesh(
-    new THREE.PlaneGeometry(300, 600),
-    new THREE.MeshLambertMaterial({ map: buildGrassTexture(512) })
+    new THREE.PlaneGeometry(HOLE.fairway.width, HOLE.fairway.length),
+    new THREE.MeshLambertMaterial({ map: grassTex })
   );
   fairway.rotation.x = -Math.PI / 2;
-  fairway.position.set(0, 0, -150);
+  fairway.position.set(HOLE.fairway.x, 0, HOLE.fairway.centerZ);
   fairway.receiveShadow = true;
   scene.add(fairway);
 
-  function addRough(x) {
-    const m = new THREE.Mesh(
-      new THREE.PlaneGeometry(60, 600),
-      new THREE.MeshLambertMaterial({ color: 0x2d6a2d })
+  // ─── Rough (flanking strips) ─────────────────────────────────────────────────
+  const roughMat = new THREE.MeshLambertMaterial({ color: 0x2d6a2d });
+  [-1, 1].forEach(side => {
+    const roughX = side * (HOLE.fairway.width / 2 + HOLE.rough.flanking / 2);
+    const strip = new THREE.Mesh(
+      new THREE.PlaneGeometry(HOLE.rough.flanking, HOLE.fairway.length),
+      roughMat
     );
-    m.rotation.x = -Math.PI / 2;
-    m.position.set(x, -0.01, -150);
-    m.receiveShadow = true;
-    scene.add(m);
-  }
-  addRough(-105);
-  addRough( 105);
+    strip.rotation.x = -Math.PI / 2;
+    strip.position.set(roughX, -0.01, HOLE.fairway.centerZ);
+    strip.receiveShadow = true;
+    scene.add(strip);
+  });
+
+  // Large backdrop for ground continuity behind the green
+  const backdrop = new THREE.Mesh(
+    new THREE.PlaneGeometry(300, 300),
+    new THREE.MeshLambertMaterial({ color: 0x2d6a2d })
+  );
+  backdrop.rotation.x = -Math.PI / 2;
+  backdrop.position.set(0, -0.02, -195);
+  backdrop.receiveShadow = true;
+  scene.add(backdrop);
 
   // ─── Tee box ─────────────────────────────────────────────────────────────────
   const teeBox = new THREE.Mesh(
@@ -297,6 +347,64 @@
   teePeg.position.set(0, 0.11, 0);
   teePeg.castShadow = true;
   scene.add(teePeg);
+
+  // ─── Green ───────────────────────────────────────────────────────────────────
+  // Mound: CylinderGeometry top = green.radius, base slightly wider, positioned
+  // so top face lands exactly at y = green.elevation.
+  const moundHeight = HOLE.green.elevation + 0.3;
+  const mound = new THREE.Mesh(
+    new THREE.CylinderGeometry(HOLE.green.radius, HOLE.green.radius + 2.5, moundHeight, 32),
+    new THREE.MeshLambertMaterial({ color: 0x4a9e4a })
+  );
+  mound.position.set(HOLE.green.x, HOLE.green.elevation - moundHeight / 2, HOLE.green.z);
+  mound.receiveShadow = true;
+  scene.add(mound);
+
+  // Green surface: +0.001 above mound top to prevent Z-fighting
+  const greenSurface = new THREE.Mesh(
+    new THREE.CircleGeometry(HOLE.green.radius, 32),
+    new THREE.MeshLambertMaterial({ color: 0x5dbf5d })
+  );
+  greenSurface.rotation.x = -Math.PI / 2;
+  greenSurface.position.set(HOLE.green.x, HOLE.green.elevation + 0.001, HOLE.green.z);
+  greenSurface.receiveShadow = true;
+  scene.add(greenSurface);
+
+  // ─── 3D hole cup ─────────────────────────────────────────────────────────────
+  // White metal rim ring lying flat on the green surface
+  const cupRim = new THREE.Mesh(
+    new THREE.TorusGeometry(0.28, 0.04, 8, 32),
+    new THREE.MeshLambertMaterial({ color: 0xe8e8e8 })
+  );
+  cupRim.rotation.x = Math.PI / 2;   // lay flat (torus defaults to vertical)
+  cupRim.position.set(HOLE.flag.x, HOLE.green.elevation + 0.022, HOLE.flag.z);
+  scene.add(cupRim);
+
+  // Black cylinder body sunk below the green surface
+  const cupBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.27, 0.27, 0.5, 16),
+    new THREE.MeshBasicMaterial({ color: 0x111111 })
+  );
+  // Center at elevation - 0.25 → top face flush with green, bottom 0.5 units down
+  cupBody.position.set(HOLE.flag.x, HOLE.green.elevation - 0.25, HOLE.flag.z);
+  scene.add(cupBody);
+
+  // ─── Flagstick ────────────────────────────────────────────────────────────────
+  const pole = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.04, 0.04, 5.5, 8),
+    new THREE.MeshLambertMaterial({ color: 0xdddddd })
+  );
+  pole.position.set(HOLE.flag.x, HOLE.green.elevation + 2.75, HOLE.flag.z);
+  pole.castShadow = true;
+  scene.add(pole);
+
+  // Flag panel — offset half its width from pole centre so it hangs to one side
+  const flag = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.2, 0.8),
+    new THREE.MeshLambertMaterial({ color: HOLE.flag.color, side: THREE.DoubleSide })
+  );
+  flag.position.set(HOLE.flag.x + 0.6, HOLE.green.elevation + 5.1, HOLE.flag.z);
+  scene.add(flag);
 
   // ─── Golf ball ───────────────────────────────────────────────────────────────
   const ball = new THREE.Mesh(
@@ -319,32 +427,6 @@
   ballShadow.position.y = 0.021;
   scene.add(ballShadow);
 
-  // ─── Distant flag / pin ───────────────────────────────────────────────────────
-  const FLAG_Z = -280;
-
-  const pole = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.04, 0.04, 6, 8),
-    new THREE.MeshLambertMaterial({ color: 0xdddddd })
-  );
-  pole.position.set(0, 3, FLAG_Z);
-  pole.castShadow = true;
-  scene.add(pole);
-
-  const flag = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.5, 0.9),
-    new THREE.MeshLambertMaterial({ color: 0xee2222, side: THREE.DoubleSide })
-  );
-  flag.position.set(0.75, 5.55, FLAG_Z);
-  scene.add(flag);
-
-  const cup = new THREE.Mesh(
-    new THREE.CircleGeometry(0.25, 32),
-    new THREE.MeshBasicMaterial({ color: 0x111111 })
-  );
-  cup.rotation.x = -Math.PI / 2;
-  cup.position.set(0, 0.015, FLAG_Z);
-  scene.add(cup);
-
   // ─── Horizon hills ───────────────────────────────────────────────────────────
   function addHills(z, w, h, color) {
     const geo = new THREE.CylinderGeometry(0, w * 0.5, h, 6);
@@ -355,9 +437,10 @@
       scene.add(m);
     }
   }
-  addHills(-310, 120, 18, 0x2d7a2d);
-  addHills(-280,  90, 12, 0x3a8c3a);
-  addHills(-260,  70,  8, 0x4a9e4a);
+  // Moved closer so they sit naturally behind the par-3 green at z=-130
+  addHills(-210, 120, 18, 0x2d7a2d);
+  addHills(-195,  90, 12, 0x3a8c3a);
+  addHills(-185,  70,  8, 0x4a9e4a);
 
   // ─── Camera ──────────────────────────────────────────────────────────────────
   const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -377,6 +460,10 @@
   const distText  = document.getElementById('dist-text');
   const resetBtn  = document.getElementById('reset-btn');
 
+  // ─── Mini-map canvas context (cached once) ────────────────────────────────────
+  const mmCanvas = document.getElementById('minimap');
+  const mmCtx    = mmCanvas.getContext('2d');
+
   function flashText(el, msg, duration = 1400) {
     el.textContent = msg;
     el.style.transition = 'none';
@@ -388,7 +475,6 @@
   }
 
   function showStopped() {
-    // Convert scene units to approximate yards (1 unit ≈ 1.15 yds)
     const dist = Math.round(Math.abs(ball.position.z) * 1.15);
     flashText(distText, dist + ' YDS', 5000);
     resetBtn.style.display = 'block';
@@ -407,7 +493,6 @@
     resetBtn.style.display    = 'none';
     powerWrap.style.display   = 'block';
 
-    // Snap camera back behind tee
     camCurrent.set(0, 3.5, 10);
     lookCurrent.set(0, 0.5, -10);
 
@@ -427,10 +512,9 @@
     const elapsed = performance.now() / 1000 - chargeStart;
     const power   = Math.min(1, elapsed / MAX_POWER_TIME);
 
-    if (power < 0.04) { state = 'idle'; return; } // accidental tap — ignore
+    if (power < 0.04) { state = 'idle'; return; }
 
     const speed = THREE.MathUtils.lerp(MIN_LAUNCH_SPEED, MAX_LAUNCH_SPEED, power);
-    // Launch angle: ~30° for all powers, slightly flatter at max
     const angle = THREE.MathUtils.lerp(0.54, 0.48, power);
     vel.set(0, speed * Math.sin(angle), -speed * Math.cos(angle));
 
@@ -453,13 +537,26 @@
   window.addEventListener('mouseup', e => { if (e.button === 0) releaseSwing(); });
   resetBtn.addEventListener('click', reset);
 
+  // ─── Ground elevation helper ──────────────────────────────────────────────────
+  // Returns the y-coordinate of the ground surface at (x, z).
+  // Uses a slightly shrunk radius so the ball doesn't snap up at the visible rim edge.
+  function getGroundY(x, z) {
+    const dx = x - HOLE.green.x;
+    const dz = z - HOLE.green.z;
+    if (Math.sqrt(dx * dx + dz * dz) < HOLE.green.radius - 0.3) {
+      return HOLE.green.elevation;
+    }
+    return 0;
+  }
+
   // ─── Blob shadow helper ───────────────────────────────────────────────────────
   function updateBlobShadow() {
     ballShadow.position.x = ball.position.x;
     ballShadow.position.z = ball.position.z;
-    const height   = Math.max(0, ball.position.y - BALL_RADIUS);
-    const scale    = Math.max(0.12, 1.0 - height * 0.022);
-    const opacity  = Math.max(0.03, 0.38 - height * 0.009);
+    ballShadow.position.y = getGroundY(ball.position.x, ball.position.z) + 0.021;
+    const height  = Math.max(0, ball.position.y - BALL_RADIUS - getGroundY(ball.position.x, ball.position.z));
+    const scale   = Math.max(0.12, 1.0 - height * 0.022);
+    const opacity = Math.max(0.03, 0.38 - height * 0.009);
     ballShadow.scale.setScalar(scale);
     shadowMat.opacity = opacity;
   }
@@ -471,12 +568,11 @@
     if (state === 'flying') {
       vel.y += GRAVITY * dt;
       ball.position.addScaledVector(vel, dt);
-
-      // Forward spin: rotate around X proportional to Z velocity
       ball.rotation.x -= vel.z * dt * 3.5;
 
-      if (ball.position.y <= BALL_RADIUS) {
-        ball.position.y = BALL_RADIUS;
+      const floorY = getGroundY(ball.position.x, ball.position.z) + BALL_RADIUS;
+      if (ball.position.y <= floorY) {
+        ball.position.y = floorY;
         if (Math.abs(vel.y) > 1.8 && bounceCount < 3) {
           vel.y *= -BOUNCE_RESTITUTION;
           vel.z *=  0.85;
@@ -493,12 +589,11 @@
       ball.position.addScaledVector(vel, dt);
       ball.rotation.x -= vel.z * dt * 3.5;
 
-      // Frame-rate independent friction: decay per frame normalised to 60fps
       const friction = Math.pow(ROLL_FRICTION, dt * 60);
       vel.x *= friction;
       vel.z *= friction;
       vel.y  = 0;
-      ball.position.y = BALL_RADIUS;
+      ball.position.y = getGroundY(ball.position.x, ball.position.z) + BALL_RADIUS;
 
       if (Math.sqrt(vel.x * vel.x + vel.z * vel.z) < STOP_SPEED) {
         vel.set(0, 0, 0);
@@ -515,19 +610,16 @@
     let targetPos, targetLook, lerpK;
 
     if (state === 'idle' || state === 'charging') {
-      // Stay behind tee with gentle vertical bob
       const bob = Math.sin(t * 0.4) * 0.04;
       targetPos  = new THREE.Vector3(0, 3.5 + bob, 10);
       targetLook = new THREE.Vector3(0, 0.5, -10);
       lerpK = 3;
     } else if (state === 'stopped') {
-      // Settle low behind ball
       targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 3.2, ball.position.z + 10);
       targetLook = new THREE.Vector3(ball.position.x, ball.position.y + 0.3, ball.position.z - 12);
       lerpK = 1.5;
     } else {
-      // Follow ball during flight and roll
-      targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 4.8, ball.position.z + 14);
+      targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 4.8, ball.position.z + 12);
       targetLook = new THREE.Vector3(ball.position.x, ball.position.y - 0.5, ball.position.z - 18);
       lerpK = 4.5;
     }
@@ -548,22 +640,92 @@
     }
   }
 
+  // ─── Mini-map coordinate mapping ──────────────────────────────────────────────
+  // World x: -40..+40  → canvas 0..120
+  // World z: +8..-148  → canvas 0..160  (tee near top, green near bottom)
+  function wmX(wx) { return (wx + 40) / 80 * 120; }
+  function wmZ(wz) { return (-wz + 8) / 156 * 160; }
+
+  function drawMinimap() {
+    mmCtx.clearRect(0, 0, 120, 160);
+
+    // Background
+    mmCtx.fillStyle = 'rgba(20,40,20,0.88)';
+    mmCtx.fillRect(0, 0, 120, 160);
+
+    // Pre-compute fairway rect bounds (tee end = top, green end = bottom)
+    const fwHalfW = HOLE.fairway.width / 2;
+    const fwLX   = wmX(-fwHalfW);
+    const fwRX   = wmX( fwHalfW);
+    const fwTopY = wmZ(HOLE.fairway.centerZ + HOLE.fairway.length / 2); // near tee → small Y
+    const fwBotY = wmZ(HOLE.fairway.centerZ - HOLE.fairway.length / 2); // near green → large Y
+    const fwW    = fwRX - fwLX;
+    const fwH    = fwBotY - fwTopY;
+
+    // Rough strips
+    mmCtx.fillStyle = '#2d5a2d';
+    mmCtx.fillRect(wmX(-fwHalfW - HOLE.rough.flanking), fwTopY,
+                   wmX(-fwHalfW) - wmX(-fwHalfW - HOLE.rough.flanking), fwH);
+    mmCtx.fillRect(fwRX, fwTopY,
+                   wmX(fwHalfW + HOLE.rough.flanking) - fwRX, fwH);
+
+    // Fairway
+    mmCtx.fillStyle = '#4a9e4a';
+    mmCtx.fillRect(fwLX, fwTopY, fwW, fwH);
+
+    // Green circle
+    const greenPxR = HOLE.green.radius / 80 * 120;
+    mmCtx.beginPath();
+    mmCtx.arc(wmX(HOLE.green.x), wmZ(HOLE.green.z), greenPxR, 0, Math.PI * 2);
+    mmCtx.fillStyle = '#5dbf5d';
+    mmCtx.fill();
+
+    // Tee marker
+    mmCtx.fillStyle = '#7de07d';
+    mmCtx.fillRect(wmX(-1.5), wmZ(1.5), 3, 3);
+
+    // Flag pin (small white circle)
+    mmCtx.beginPath();
+    mmCtx.arc(wmX(HOLE.flag.x), wmZ(HOLE.flag.z), 2, 0, Math.PI * 2);
+    mmCtx.fillStyle = '#ffffff';
+    mmCtx.fill();
+
+    // Ball drop-shadow
+    mmCtx.beginPath();
+    mmCtx.arc(wmX(ball.position.x) + 1, wmZ(ball.position.z) + 1, 3.5, 0, Math.PI * 2);
+    mmCtx.fillStyle = 'rgba(0,0,0,0.45)';
+    mmCtx.fill();
+
+    // Ball dot (always on top)
+    mmCtx.beginPath();
+    mmCtx.arc(wmX(ball.position.x), wmZ(ball.position.z), 4, 0, Math.PI * 2);
+    mmCtx.fillStyle = 'rgba(255,255,255,0.95)';
+    mmCtx.fill();
+
+    // Labels
+    mmCtx.fillStyle = 'rgba(255,255,255,0.45)';
+    mmCtx.font = '8px Georgia';
+    mmCtx.fillText('T', wmX(2.5), wmZ(-2));
+    mmCtx.fillText('G', wmX(HOLE.green.x + HOLE.green.radius + 0.5), wmZ(HOLE.green.z));
+  }
+
   // ─── Main loop ────────────────────────────────────────────────────────────────
   const clock = new THREE.Clock();
 
   function animate() {
     requestAnimationFrame(animate);
-    const dt = Math.min(clock.getDelta(), 0.05); // cap at 50ms to avoid spiral
+    const dt = Math.min(clock.getDelta(), 0.05);
     const t  = clock.elapsedTime;
 
     stepPhysics(dt);
     updateCamera(dt, t);
     updatePowerBar();
 
-    // Gentle flag wave
-    flag.rotation.y  = Math.sin(t * 2.5) * 0.15;
-    flag.position.x  = 0.75 + Math.sin(t * 2.5) * 0.08;
+    // Flag wave — base x = flag.x + 0.6 (half of 1.2-wide PlaneGeometry)
+    flag.rotation.y = Math.sin(t * 2.5) * 0.15;
+    flag.position.x = HOLE.flag.x + 0.6 + Math.sin(t * 2.5) * 0.08;
 
+    drawMinimap();
     renderer.render(scene, camera);
   }
   animate();
