@@ -10,238 +10,146 @@
     canvas { display: block; }
 
     #hud {
-      position: absolute;
-      top: 20px;
-      left: 50%;
+      position: absolute; top: 20px; left: 50%;
       transform: translateX(-50%);
-      color: #fff;
-      font-family: 'Georgia', serif;
+      color: #fff; font-family: 'Georgia', serif;
       text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-      text-align: center;
-      pointer-events: none;
+      text-align: center; pointer-events: none;
     }
     #hud h1 { font-size: 28px; letter-spacing: 3px; font-weight: normal; }
     #hud p  { font-size: 13px; margin-top: 4px; opacity: 0.75; letter-spacing: 1px; }
 
-    /* ── Power meter ─────────────────────────────────────────────────── */
     #power-wrap {
-      position: absolute;
-      bottom: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      pointer-events: none;
-      user-select: none;
+      position: absolute; bottom: 48px; left: 50%;
+      transform: translateX(-50%); text-align: center;
+      pointer-events: none; user-select: none;
     }
     #power-label {
-      color: #fff;
-      font-family: Georgia, serif;
-      font-size: 11px;
-      letter-spacing: 4px;
-      margin-bottom: 7px;
+      color: #fff; font-family: Georgia, serif; font-size: 11px;
+      letter-spacing: 4px; margin-bottom: 7px;
       text-shadow: 0 1px 4px rgba(0,0,0,0.9);
     }
     #power-bar-bg {
-      width: 240px;
-      height: 15px;
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 8px;
-      overflow: hidden;
-      margin: 0 auto;
+      width: 240px; height: 15px; background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.3); border-radius: 8px;
+      overflow: hidden; margin: 0 auto;
     }
     #power-bar-fill {
-      height: 100%;
-      width: 0%;
+      height: 100%; width: 0%;
       background: linear-gradient(to right, #4ee04e 0%, #f5d020 55%, #e83030 100%);
-      border-radius: 8px;
-      transition: width 0.05s linear;
+      border-radius: 8px; transition: width 0.05s linear;
     }
     #power-hint {
-      color: rgba(255,255,255,0.6);
-      font-family: Georgia, serif;
-      font-size: 11px;
-      letter-spacing: 2px;
-      margin-top: 7px;
+      color: rgba(255,255,255,0.6); font-family: Georgia, serif;
+      font-size: 11px; letter-spacing: 2px; margin-top: 7px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
 
-    /* ── Overlay texts ───────────────────────────────────────────────── */
     #shot-text {
-      position: absolute;
-      top: 36%;
-      left: 50%;
+      position: absolute; top: 36%; left: 50%;
       transform: translate(-50%, -50%);
-      color: #fff;
-      font-family: Georgia, serif;
-      font-size: 38px;
-      letter-spacing: 8px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.95);
-      pointer-events: none;
-      opacity: 0;
+      color: #fff; font-family: Georgia, serif; font-size: 38px;
+      letter-spacing: 8px; text-shadow: 0 2px 12px rgba(0,0,0,0.95);
+      pointer-events: none; opacity: 0;
     }
     #dist-text {
-      position: absolute;
-      top: 44%;
-      left: 50%;
+      position: absolute; top: 44%; left: 50%;
       transform: translate(-50%, -50%);
-      color: #ffe066;
-      font-family: Georgia, serif;
-      font-size: 20px;
-      letter-spacing: 4px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
-      pointer-events: none;
-      opacity: 0;
+      color: #ffe066; font-family: Georgia, serif; font-size: 20px;
+      letter-spacing: 4px; text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+      pointer-events: none; opacity: 0;
     }
 
-    /* ── Reset button ────────────────────────────────────────────────── */
     #reset-btn {
-      position: absolute;
-      bottom: 48px;
-      left: 50%;
+      position: absolute; bottom: 48px; left: 50%;
       transform: translateX(-50%);
-      color: rgba(255,255,255,0.85);
-      font-family: Georgia, serif;
-      font-size: 12px;
-      letter-spacing: 3px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-      cursor: pointer;
-      padding: 9px 26px;
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 4px;
-      background: rgba(0,0,0,0.35);
-      display: none;
+      color: rgba(255,255,255,0.85); font-family: Georgia, serif;
+      font-size: 12px; letter-spacing: 3px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8); cursor: pointer;
+      padding: 9px 26px; border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 4px; background: rgba(0,0,0,0.35); display: none;
     }
     #reset-btn:hover { background: rgba(255,255,255,0.12); }
 
-    /* ── Mini-map ────────────────────────────────────────────────────── */
     #minimap-wrap {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      pointer-events: none;
-      user-select: none;
+      position: absolute; top: 20px; right: 20px;
+      pointer-events: none; user-select: none;
     }
     #minimap-label {
-      color: rgba(255,255,255,0.8);
-      font-family: Georgia, serif;
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-align: center;
-      margin-bottom: 4px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+      color: rgba(255,255,255,0.8); font-family: Georgia, serif;
+      font-size: 10px; letter-spacing: 3px; text-align: center;
+      margin-bottom: 4px; text-shadow: 0 1px 3px rgba(0,0,0,0.9);
     }
-    #minimap {
-      display: block;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 3px;
-    }
+    #minimap { display: block; border: 1px solid rgba(255,255,255,0.25); border-radius: 3px; }
 
-    /* ── Club selector ───────────────────────────────────────────────── */
-    #club-selector {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      user-select: none;
-    }
+    #club-selector { position: absolute; bottom: 20px; left: 20px; user-select: none; }
     #club-label {
-      color: rgba(255,255,255,0.55);
-      font-family: Georgia, serif;
-      font-size: 10px;
-      letter-spacing: 3px;
-      margin-bottom: 6px;
+      color: rgba(255,255,255,0.55); font-family: Georgia, serif;
+      font-size: 10px; letter-spacing: 3px; margin-bottom: 6px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.9);
     }
     .club-btn {
-      display: block;
-      width: 90px;
-      margin-bottom: 5px;
-      padding: 7px 0;
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 3px;
-      color: rgba(255,255,255,0.6);
-      font-family: Georgia, serif;
-      font-size: 10px;
-      letter-spacing: 2px;
-      cursor: pointer;
-      text-align: center;
+      display: block; width: 90px; margin-bottom: 5px; padding: 7px 0;
+      background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 3px; color: rgba(255,255,255,0.6);
+      font-family: Georgia, serif; font-size: 10px; letter-spacing: 2px;
+      cursor: pointer; text-align: center;
     }
-    .club-btn:hover:not(.disabled) {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.35);
-    }
-    .club-btn.active {
-      border-color: rgba(255,210,40,0.85);
-      color: rgba(255,210,40,0.95);
-      background: rgba(255,210,40,0.1);
-    }
-    .club-btn.disabled {
-      opacity: 0.28;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-    .club-key {
-      opacity: 0.45;
-      font-size: 9px;
-    }
+    .club-btn:hover:not(.disabled) { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.35); }
+    .club-btn.active { border-color: rgba(255,210,40,0.85); color: rgba(255,210,40,0.95); background: rgba(255,210,40,0.1); }
+    .club-btn.disabled { opacity: 0.28; cursor: not-allowed; pointer-events: none; }
+    .club-key { opacity: 0.45; font-size: 9px; }
 
-    /* ── Stroke counter ──────────────────────────────────────────────────── */
     #stroke-counter {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      color: rgba(255,255,255,0.80);
-      font-family: Georgia, serif;
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
-      pointer-events: none;
+      position: absolute; bottom: 20px; right: 20px;
+      color: rgba(255,255,255,0.80); font-family: Georgia, serif;
+      font-size: 12px; letter-spacing: 2px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9); pointer-events: none;
     }
 
-    /* ── Scorecard overlay ───────────────────────────────────────────────── */
+    /* ── Preview overlay ─────────────────────────────────────────────── */
+    #preview-overlay {
+      position: absolute; bottom: 90px; left: 50%;
+      transform: translateX(-50%); text-align: center;
+      pointer-events: none; transition: opacity 0.8s; opacity: 0;
+    }
+    #preview-hole-name {
+      color: rgba(255,255,255,0.92); font-family: Georgia, serif;
+      font-size: 22px; letter-spacing: 6px; margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.95);
+    }
+    #preview-par-info {
+      color: rgba(255,255,255,0.55); font-family: Georgia, serif;
+      font-size: 12px; letter-spacing: 3px; margin-bottom: 8px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    }
+    #preview-skip {
+      color: rgba(255,255,255,0.28); font-family: Georgia, serif;
+      font-size: 10px; letter-spacing: 3px;
+    }
+
+    /* ── Scorecard overlay ───────────────────────────────────────────── */
     #scorecard-overlay {
-      position: absolute; inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.72);
-      z-index: 100;
+      position: absolute; inset: 0; display: none;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.72); z-index: 100;
     }
     #scorecard-box {
-      background: rgba(10,26,10,0.97);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 6px;
-      padding: 28px 32px 24px;
-      min-width: 340px;
-      font-family: Georgia, serif;
-      color: rgba(255,255,255,0.85);
+      background: rgba(10,26,10,0.97); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 6px; padding: 28px 32px 24px; min-width: 340px;
+      font-family: Georgia, serif; color: rgba(255,255,255,0.85);
     }
     #scorecard-title {
-      text-align: center;
-      font-size: 18px;
-      letter-spacing: 6px;
-      margin-bottom: 20px;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+      text-align: center; font-size: 18px; letter-spacing: 6px;
+      margin-bottom: 20px; text-shadow: 0 1px 6px rgba(0,0,0,0.9);
     }
-    #scorecard-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      letter-spacing: 1px;
-    }
+    #scorecard-table { width: 100%; border-collapse: collapse; font-size: 12px; letter-spacing: 1px; }
     #scorecard-table th {
-      color: rgba(255,255,255,0.45);
-      font-size: 10px;
-      letter-spacing: 3px;
-      padding: 0 8px 8px;
-      text-align: center;
+      color: rgba(255,255,255,0.45); font-size: 10px; letter-spacing: 3px;
+      padding: 0 8px 8px; text-align: center;
       border-bottom: 1px solid rgba(255,255,255,0.12);
     }
-    #scorecard-table td {
-      padding: 5px 8px;
-      text-align: center;
-    }
+    #scorecard-table td { padding: 5px 8px; text-align: center; }
     #scorecard-table tbody tr:hover { background: rgba(255,255,255,0.04); }
     .sc-eagle  { color: #f5d020; }
     .sc-birdie { color: #5ab4f5; }
@@ -250,22 +158,13 @@
     .sc-double { color: #e87030; }
     .sc-worse  { color: #e84040; }
     .sc-future { color: rgba(255,255,255,0.25); }
-    .sc-total  { border-top: 1px solid rgba(255,255,255,0.18);
-                 color: rgba(255,255,255,0.9); font-size: 13px; }
-    #scorecard-buttons {
-      margin-top: 22px;
-      text-align: center;
-    }
+    .sc-total  { border-top: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.9); font-size: 13px; }
+    #scorecard-buttons { margin-top: 22px; text-align: center; }
     #next-hole-btn, #play-again-btn {
-      padding: 10px 28px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.30);
-      border-radius: 4px;
-      color: rgba(255,255,255,0.90);
-      font-family: Georgia, serif;
-      font-size: 12px;
-      letter-spacing: 3px;
-      cursor: pointer;
+      padding: 10px 28px; background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.30); border-radius: 4px;
+      color: rgba(255,255,255,0.90); font-family: Georgia, serif;
+      font-size: 12px; letter-spacing: 3px; cursor: pointer;
     }
     #next-hole-btn:hover, #play-again-btn:hover { background: rgba(255,255,255,0.16); }
   </style>
@@ -294,6 +193,12 @@
 
   <div id="stroke-counter"></div>
 
+  <div id="preview-overlay">
+    <div id="preview-hole-name"></div>
+    <div id="preview-par-info"></div>
+    <div id="preview-skip">SPACE &nbsp;·&nbsp; SKIP</div>
+  </div>
+
   <div id="scorecard-overlay">
     <div id="scorecard-box">
       <div id="scorecard-title">SCORECARD</div>
@@ -321,15 +226,15 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-  // ─── Physics / game constants ─────────────────────────────────────────────────
+  // ─── Constants ────────────────────────────────────────────────────────────────
   const BALL_RADIUS        = 0.215;
   const GRAVITY            = -22;
   const BOUNCE_RESTITUTION = 0.38;
   const ROLL_FRICTION      = 0.963;
+  const SAND_FRICTION      = 0.87;
   const STOP_SPEED         = 0.10;
+  const PREVIEW_DURATION   = 5.5;  // seconds per fly-over
 
-  // ─── Club definitions ────────────────────────────────────────────────────────
-  // angle: launch loft in radians; maxTime: seconds to fill power bar
   const CLUBS = {
     driver: { name:'DRIVER', minSpeed:22, maxSpeed:74, angle:0.44, maxTime:2.2, onGreenOnly:false },
     iron:   { name:'IRON',   minSpeed:16, maxSpeed:52, angle:0.52, maxTime:2.2, onGreenOnly:false },
@@ -337,47 +242,54 @@
     putter: { name:'PUTTER', minSpeed: 2, maxSpeed:12, angle:0.03, maxTime:1.5, onGreenOnly:true  },
   };
 
-  // ─── Hole layout data ─────────────────────────────────────────────────────────
-  const HOLE = {
-    par: 3,
-    yardage: 155,
-    tee:     { x: 0, z: 0, width: 5, depth: 3 },
-    fairway: { x: 0, centerZ: -65, width: 24, length: 130 },
-    green:   { x: 0, z: -130, radius: 9, elevation: 0.7 },
-    flag:    { x: 0, z: -130, color: 0xee4422 },
-    rough:   { flanking: 22 },
-  };
-
-  // ─── 9-hole course data ───────────────────────────────────────────────────────
+  // ─── 9-hole course data (scoring only; geometry is in buildHole) ─────────────
   const COURSE = [
-    { par:3, yardage:155, name:'MEADOW LANE'  },
-    { par:4, yardage:320, name:'ELM RIDGE'    },
-    { par:5, yardage:480, name:'OAK VALLEY'   },
-    { par:3, yardage:135, name:'PINE HOLLOW'  },
-    { par:4, yardage:350, name:'BIRCH TRAIL'  },
-    { par:4, yardage:295, name:'WILLOW BEND'  },
-    { par:3, yardage:175, name:'CEDAR POINT'  },
-    { par:5, yardage:520, name:'MAPLE GROVE'  },
-    { par:4, yardage:380, name:'CHERRY HILL'  },
+    { par:3, yardage:155, name:'MEADOW LANE'    },
+    { par:4, yardage:340, name:'ELM RIDGE'      },
+    { par:4, yardage:295, name:'HIGHLAND FALLS' },
+    { par:3, yardage:180, name:'LAKESIDE'       },
+    { par:4, yardage:360, name:'SANDY PINES'    },
+    { par:5, yardage:520, name:'OAK VALLEY'     },
+    { par:3, yardage:150, name:'ISLE GREEN'     },
+    { par:4, yardage:330, name:'THE NARROWS'    },
+    { par:4, yardage:410, name:'CHERRY HILL'    },
   ];
 
+  // ─── Mutable per-hole state (updated by buildHole) ───────────────────────────
+  const HOLE = {
+    par: 3, yardage: 155,
+    tee:   { x:0, z:0, elevation:0, platformW:6, platformD:4 },
+    green: { x:0, z:-130, radius:9, elevation:0.7 },
+    flag:  { x:0, z:-130, color:0xee4422 },
+    fairwaySegs: [{ x:0, z:-65, w:24, len:130, ry:0 }],
+    rough:  { flanking:22 },
+    mm:     { xMin:-40, zMax:8, xRange:80, zRange:156 },
+    bunkers:    [],
+    waterRects: [],
+    islandGreen: false,
+    checkWater: () => false,
+    flyover: [
+      { pos:[25,32,22],   look:[0,2,-60]  },
+      { pos:[12,22,-50],  look:[0,2,-100] },
+      { pos:[8,14,-100],  look:[0,1,-130] },
+      { pos:[4,8,-100],   look:[0,1,-130] },
+    ],
+  };
+
   // ─── Game state ───────────────────────────────────────────────────────────────
-  let state          = 'idle';
+  let state          = 'preview';
   let chargeStart    = 0;
   let bounceCount    = 0;
-  let aimAngle       = 0;      // radians; 0 = straight ahead (-Z); + = right, - = left
-  let flightAimAngle = 0;      // captured at launch, used for camera during flight
+  let aimAngle       = 0;
+  let flightAimAngle = 0;
   let currentClub    = 'driver';
   const vel          = new THREE.Vector3();
-
-  // Smooth camera tracking
-  const camCurrent  = new THREE.Vector3(0, 3.5, 10);
-  const lookCurrent = new THREE.Vector3(0, 0.5, -10);
-
-  // Input tracking
-  const keysHeld    = new Set();
-  let isDraggingAim = false;
-  let aimDragLastX  = 0;
+  const camCurrent   = new THREE.Vector3(0, 3.5, 10);
+  const lookCurrent  = new THREE.Vector3(0, 0.5, -10);
+  const keysHeld     = new Set();
+  let isDraggingAim  = false;
+  let aimDragLastX   = 0;
+  let previewT       = 0;
 
   // ─── Scoring state ────────────────────────────────────────────────────────────
   let currentHoleIdx = 0;
@@ -386,30 +298,30 @@
   let sinkTimer      = 0;
   let sinkStartY     = 0;
 
+  // ─── Per-hole scene objects ───────────────────────────────────────────────────
+  let holeObjects = [];
+  let teePeg = null, flagMesh = null;
+
   // ─── Renderer ────────────────────────────────────────────────────────────────
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding    = THREE.sRGBEncoding;
+  renderer.toneMapping       = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
   document.body.appendChild(renderer.domElement);
 
   // ─── Scene ───────────────────────────────────────────────────────────────────
   const scene = new THREE.Scene();
 
-  // ─── Sky gradient sphere ──────────────────────────────────────────────────────
-  const skyGeo = new THREE.SphereGeometry(500, 32, 32);
-  skyGeo.deleteAttribute('normal');
-  skyGeo.deleteAttribute('uv');
+  // Sky gradient sphere
   {
-    const topC  = new THREE.Color(0x1a6ebe);
-    const horizC = new THREE.Color(0x9ecfe8);
-    const botC   = new THREE.Color(0x7ab87a);
-    const cols   = [];
-    const pa     = skyGeo.attributes.position;
+    const skyGeo = new THREE.SphereGeometry(500, 32, 32);
+    skyGeo.deleteAttribute('normal'); skyGeo.deleteAttribute('uv');
+    const topC = new THREE.Color(0x1a6ebe), horizC = new THREE.Color(0x9ecfe8), botC = new THREE.Color(0x7ab87a);
+    const cols = [], pa = skyGeo.attributes.position;
     for (let i = 0; i < pa.count; i++) {
       const t = THREE.MathUtils.clamp((pa.getY(i) + 500) / 1000, 0, 1);
       const c = new THREE.Color();
@@ -418,183 +330,66 @@
       cols.push(c.r, c.g, c.b);
     }
     skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+    scene.add(new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
   }
-  scene.add(new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
 
-  // ─── Lighting ────────────────────────────────────────────────────────────────
+  // Lighting
   scene.add(new THREE.AmbientLight(0xfff4e0, 0.55));
   const sun = new THREE.DirectionalLight(0xfff8d6, 1.4);
   sun.position.set(80, 120, 60);
   sun.castShadow = true;
-  sun.shadow.camera.left   = -100;
-  sun.shadow.camera.right  =  100;
-  sun.shadow.camera.top    =  100;
-  sun.shadow.camera.bottom = -100;
-  sun.shadow.camera.near   =  0.5;
-  sun.shadow.camera.far    =  400;
-  sun.shadow.mapSize.set(2048, 2048);
-  sun.shadow.bias = -0.0003;
+  sun.shadow.camera.left = -150; sun.shadow.camera.right = 150;
+  sun.shadow.camera.top  =  150; sun.shadow.camera.bottom = -150;
+  sun.shadow.camera.near = 0.5;  sun.shadow.camera.far = 500;
+  sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0003;
   scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xb0d8ff, 0.35);
-  fill.position.set(-60, 40, -40);
-  scene.add(fill);
+  scene.add(Object.assign(new THREE.DirectionalLight(0xb0d8ff, 0.35), { position: new THREE.Vector3(-60,40,-40) }));
 
   // ─── Procedural grass texture ─────────────────────────────────────────────────
-  function buildGrassTexture(size) {
-    const cv = document.createElement('canvas');
-    cv.width = cv.height = size;
+  const grassTex = (() => {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 512;
     const cx = cv.getContext('2d');
-    function hash(x,y){const n=Math.sin(x*127.1+y*311.7)*43758.5453;return n-Math.floor(n);}
-    function noise(x,y){
+    const hash = (x,y) => { const n=Math.sin(x*127.1+y*311.7)*43758.5453; return n-Math.floor(n); };
+    const noise = (x,y) => {
       const ix=Math.floor(x),iy=Math.floor(y),fx=x-ix,fy=y-iy;
       const ux=fx*fx*(3-2*fx),uy=fy*fy*(3-2*fy);
       const a=hash(ix,iy),b=hash(ix+1,iy),c=hash(ix,iy+1),d=hash(ix+1,iy+1);
       return a+(b-a)*ux+(c-a)*uy+(b-a+a-b-c+d)*ux*uy;
+    };
+    const fbm = (x,y) => { let v=0,a=0.5,f=1; for(let o=0;o<5;o++){v+=a*noise(x*f,y*f);a*=0.5;f*=2.1;} return v; };
+    const img = cx.createImageData(512,512);
+    for (let py=0;py<512;py++) for (let px=0;px<512;px++){
+      const n=fbm(px/512*8,py/512*8),b=0.30+n*0.45,i=(py*512+px)*4;
+      img.data[i]=Math.round(b*62); img.data[i+1]=Math.round(b*130); img.data[i+2]=Math.round(b*55); img.data[i+3]=255;
     }
-    function fbm(x,y){let v=0,a=0.5,f=1;for(let o=0;o<5;o++){v+=a*noise(x*f,y*f);a*=0.5;f*=2.1;}return v;}
-    const img = cx.createImageData(size, size);
-    for (let py=0;py<size;py++) for (let px=0;px<size;px++){
-      const n=fbm(px/size*8,py/size*8),b=0.30+n*0.45,i=(py*size+px)*4;
-      img.data[i]=Math.round(b*62);img.data[i+1]=Math.round(b*130);img.data[i+2]=Math.round(b*55);img.data[i+3]=255;
-    }
-    cx.putImageData(img, 0, 0);
+    cx.putImageData(img,0,0);
     const tex = new THREE.CanvasTexture(cv);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(6, 20);
     tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     return tex;
-  }
+  })();
 
-  // ─── Course geometry ─────────────────────────────────────────────────────────
-  const grassTex = buildGrassTexture(512);
-
-  const fairway = new THREE.Mesh(
-    new THREE.PlaneGeometry(HOLE.fairway.width, HOLE.fairway.length),
-    new THREE.MeshLambertMaterial({ map: grassTex })
-  );
-  fairway.rotation.x = -Math.PI / 2;
-  fairway.position.set(HOLE.fairway.x, 0, HOLE.fairway.centerZ);
-  fairway.receiveShadow = true;
-  scene.add(fairway);
-
-  const roughMat = new THREE.MeshLambertMaterial({ color: 0x2d6a2d });
-  [-1, 1].forEach(side => {
-    const r = new THREE.Mesh(
-      new THREE.PlaneGeometry(HOLE.rough.flanking, HOLE.fairway.length), roughMat
-    );
-    r.rotation.x = -Math.PI / 2;
-    r.position.set(side * (HOLE.fairway.width/2 + HOLE.rough.flanking/2), -0.01, HOLE.fairway.centerZ);
-    r.receiveShadow = true;
-    scene.add(r);
-  });
-
-  const backdrop = new THREE.Mesh(
-    new THREE.PlaneGeometry(300, 300),
-    new THREE.MeshLambertMaterial({ color: 0x2d6a2d })
-  );
-  backdrop.rotation.x = -Math.PI / 2;
-  backdrop.position.set(0, -0.02, -195);
-  backdrop.receiveShadow = true;
-  scene.add(backdrop);
-
-  // Tee box + peg
-  const teeBox = new THREE.Mesh(
-    new THREE.PlaneGeometry(6, 4), new THREE.MeshLambertMaterial({ color: 0x5db85d })
-  );
-  teeBox.rotation.x = -Math.PI / 2;
-  teeBox.position.set(0, 0.01, 0);
-  teeBox.receiveShadow = true;
-  scene.add(teeBox);
-
-  const teePeg = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.05, 0.025, 0.22, 8),
-    new THREE.MeshLambertMaterial({ color: 0xf5c842 })
-  );
-  teePeg.position.set(0, 0.11, 0);
-  teePeg.castShadow = true;
-  scene.add(teePeg);
-
-  // Green
-  const moundH = HOLE.green.elevation + 0.3;
-  const mound = new THREE.Mesh(
-    new THREE.CylinderGeometry(HOLE.green.radius, HOLE.green.radius + 2.5, moundH, 32),
-    new THREE.MeshLambertMaterial({ color: 0x4a9e4a })
-  );
-  mound.position.set(HOLE.green.x, HOLE.green.elevation - moundH / 2, HOLE.green.z);
-  mound.receiveShadow = true;
-  scene.add(mound);
-
-  const greenSurface = new THREE.Mesh(
-    new THREE.CircleGeometry(HOLE.green.radius, 32),
-    new THREE.MeshLambertMaterial({ color: 0x5dbf5d })
-  );
-  greenSurface.rotation.x = -Math.PI / 2;
-  greenSurface.position.set(HOLE.green.x, HOLE.green.elevation + 0.001, HOLE.green.z);
-  greenSurface.receiveShadow = true;
-  scene.add(greenSurface);
-
-  // Hole cup
-  const cupRim = new THREE.Mesh(
-    new THREE.TorusGeometry(0.28, 0.04, 8, 32),
-    new THREE.MeshLambertMaterial({ color: 0xe8e8e8 })
-  );
-  cupRim.rotation.x = Math.PI / 2;
-  cupRim.position.set(HOLE.flag.x, HOLE.green.elevation + 0.022, HOLE.flag.z);
-  scene.add(cupRim);
-
-  const cupBody = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.27, 0.27, 0.5, 16),
-    new THREE.MeshBasicMaterial({ color: 0x111111 })
-  );
-  cupBody.position.set(HOLE.flag.x, HOLE.green.elevation - 0.25, HOLE.flag.z);
-  scene.add(cupBody);
-
-  // Flagstick
-  const pole = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.04, 0.04, 5.5, 8),
-    new THREE.MeshLambertMaterial({ color: 0xdddddd })
-  );
-  pole.position.set(HOLE.flag.x, HOLE.green.elevation + 2.75, HOLE.flag.z);
-  pole.castShadow = true;
-  scene.add(pole);
-
-  const flag = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.2, 0.8),
-    new THREE.MeshLambertMaterial({ color: HOLE.flag.color, side: THREE.DoubleSide })
-  );
-  flag.position.set(HOLE.flag.x + 0.6, HOLE.green.elevation + 5.1, HOLE.flag.z);
-  scene.add(flag);
-
-  // Golf ball
+  // ─── Golf ball ───────────────────────────────────────────────────────────────
   const ball = new THREE.Mesh(
     new THREE.SphereGeometry(BALL_RADIUS, 32, 32),
     new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xaaaaaa, shininess: 120 })
   );
-  ball.position.set(0, BALL_RADIUS + 0.115, 0);
   ball.castShadow = true;
   scene.add(ball);
 
-  // Ball blob shadow
-  const shadowMat = new THREE.MeshBasicMaterial({
-    color: 0x000000, transparent: true, opacity: 0.38, depthWrite: false,
-  });
+  const shadowMat = new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.38, depthWrite:false });
   const ballShadow = new THREE.Mesh(new THREE.CircleGeometry(0.5, 24), shadowMat);
   ballShadow.rotation.x = -Math.PI / 2;
-  ballShadow.position.y = 0.021;
   scene.add(ballShadow);
 
   // ─── Particle system ─────────────────────────────────────────────────────────
   const N_PARTICLES = 50;
-  const partPosBuf  = new Float32Array(N_PARTICLES * 3);
-  const partColBuf  = new Float32Array(N_PARTICLES * 3);
-  const partGeo     = new THREE.BufferGeometry();
+  const partPosBuf = new Float32Array(N_PARTICLES * 3);
+  const partColBuf = new Float32Array(N_PARTICLES * 3);
+  const partGeo    = new THREE.BufferGeometry();
   partGeo.setAttribute('position', new THREE.BufferAttribute(partPosBuf, 3));
   partGeo.setAttribute('color',    new THREE.BufferAttribute(partColBuf, 3));
-  const partMat = new THREE.PointsMaterial({
-    size: 0.38, vertexColors: true,
-    transparent: true, opacity: 1.0,
-    sizeAttenuation: true, depthWrite: false,
-  });
+  const partMat = new THREE.PointsMaterial({ size:0.38, vertexColors:true, transparent:true, opacity:1.0, sizeAttenuation:true, depthWrite:false });
   const particles = new THREE.Points(partGeo, partMat);
   particles.visible = false;
   scene.add(particles);
@@ -602,59 +397,34 @@
   let partActive = false, partTime = 0;
   const PART_LIFE = 2.5;
 
-  // ─── Aim line (dashed, on ground) ────────────────────────────────────────────
+  // ─── Aim line & arc ──────────────────────────────────────────────────────────
   const AIM_PTS = 22;
   const aimPosBuf = new Float32Array(AIM_PTS * 3);
   const aimLineGeo = new THREE.BufferGeometry();
   aimLineGeo.setAttribute('position', new THREE.BufferAttribute(aimPosBuf, 3));
-  const aimLine = new THREE.Line(aimLineGeo, new THREE.LineDashedMaterial({
-    color: 0xffffff, dashSize: 0.85, gapSize: 0.55,
-    transparent: true, opacity: 0.72,
-  }));
+  const aimLine = new THREE.Line(aimLineGeo, new THREE.LineDashedMaterial({ color:0xffffff, dashSize:0.85, gapSize:0.55, transparent:true, opacity:0.72 }));
   aimLine.visible = false;
   scene.add(aimLine);
 
-  // Aim arrowhead cone (inside a group so rotation.y drives aim direction)
   const aimArrowGroup = new THREE.Group();
-  const aimCone = new THREE.Mesh(
-    new THREE.ConeGeometry(0.32, 0.9, 8),
-    new THREE.MeshBasicMaterial({ color: 0xffde3a, transparent: true, opacity: 0.88 })
-  );
-  aimCone.rotation.x = Math.PI / 2;   // default cone points +Y; rotate to point -Z
+  const aimCone = new THREE.Mesh(new THREE.ConeGeometry(0.32, 0.9, 8), new THREE.MeshBasicMaterial({ color:0xffde3a, transparent:true, opacity:0.88 }));
+  aimCone.rotation.x = Math.PI / 2;
   aimArrowGroup.add(aimCone);
   aimArrowGroup.visible = false;
   scene.add(aimArrowGroup);
 
-  // ─── Trajectory arc line ─────────────────────────────────────────────────────
   const ARC_CAP = 80;
   const arcPosBuf = new Float32Array(ARC_CAP * 3);
   const arcLineGeo = new THREE.BufferGeometry();
   arcLineGeo.setAttribute('position', new THREE.BufferAttribute(arcPosBuf, 3));
   arcLineGeo.setDrawRange(0, 0);
-  const arcLine = new THREE.Line(arcLineGeo, new THREE.LineBasicMaterial({
-    color: 0xffde3a, transparent: true, opacity: 0.50,
-  }));
+  const arcLine = new THREE.Line(arcLineGeo, new THREE.LineBasicMaterial({ color:0xffde3a, transparent:true, opacity:0.50 }));
   arcLine.visible = false;
   scene.add(arcLine);
-
-  // ─── Horizon hills ───────────────────────────────────────────────────────────
-  function addHills(z, w, h, color) {
-    const geo = new THREE.CylinderGeometry(0, w * 0.5, h, 6);
-    const mat = new THREE.MeshLambertMaterial({ color });
-    for (let x = -200; x <= 200; x += 55 + Math.random() * 30) {
-      const m = new THREE.Mesh(geo, mat);
-      m.position.set(x, h * 0.5 - 0.5, z);
-      scene.add(m);
-    }
-  }
-  addHills(-210, 120, 18, 0x2d7a2d);
-  addHills(-195,  90, 12, 0x3a8c3a);
-  addHills(-185,  70,  8, 0x4a9e4a);
 
   // ─── Camera ──────────────────────────────────────────────────────────────────
   const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.copy(camCurrent);
-  camera.lookAt(lookCurrent);
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -662,29 +432,576 @@
   });
 
   // ─── UI refs ─────────────────────────────────────────────────────────────────
-  const powerWrap = document.getElementById('power-wrap');
-  const powerFill = document.getElementById('power-bar-fill');
-  const shotText  = document.getElementById('shot-text');
-  const distText  = document.getElementById('dist-text');
-  const resetBtn  = document.getElementById('reset-btn');
+  const powerWrap      = document.getElementById('power-wrap');
+  const powerFill      = document.getElementById('power-bar-fill');
+  const shotText       = document.getElementById('shot-text');
+  const distText       = document.getElementById('dist-text');
+  const resetBtn       = document.getElementById('reset-btn');
   const mmCanvas       = document.getElementById('minimap');
   const mmCtx          = mmCanvas.getContext('2d');
   const strokeCounterEl = document.getElementById('stroke-counter');
+  const previewOverlay = document.getElementById('preview-overlay');
+
+  // ─── buildHole ───────────────────────────────────────────────────────────────
+  function buildHole(idx) {
+    // Clear previous hole geometry
+    holeObjects.forEach(o => {
+      scene.remove(o);
+      o.traverse(c => { if (c.geometry) c.geometry.dispose(); });
+    });
+    holeObjects = [];
+    flagMesh = null; teePeg = null;
+
+    // ── Shared materials created fresh each hole ──────────────────────────────
+    const grassMat = new THREE.MeshLambertMaterial({ map: grassTex });
+    const roughMat = new THREE.MeshLambertMaterial({ color: 0x2d6a2d });
+    const greenMat = new THREE.MeshLambertMaterial({ color: 0x5dbf5d });
+    const moundMat = new THREE.MeshLambertMaterial({ color: 0x4a9e4a });
+    const sandMat  = new THREE.MeshLambertMaterial({ color: 0xe8cc80 });
+    const waterMat = new THREE.MeshLambertMaterial({ color: 0x1a5faa, transparent: true, opacity: 0.82 });
+
+    function addHO(obj)  { holeObjects.push(obj); scene.add(obj); return obj; }
+
+    // Flat plane (no Y-rotation — use addSeg for rotated segments)
+    function addPlane(w, d, mat, x, y, z) {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), mat);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(x, y, z);
+      m.receiveShadow = true;
+      return addHO(m);
+    }
+
+    // Fairway/rough segment with optional Y rotation (via Group)
+    function addSeg(cx, cz, w, len, ry, mat, yOff) {
+      const grp = new THREE.Group();
+      grp.position.set(cx, 0, cz);
+      grp.rotation.y = ry;
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, len), mat);
+      m.rotation.x = -Math.PI / 2;
+      m.position.y = yOff || 0;
+      m.receiveShadow = true;
+      grp.add(m);
+      holeObjects.push(grp);
+      scene.add(grp);
+      return grp;
+    }
+
+    function addBackdrop(z, w) {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w || 400, 400), new THREE.MeshLambertMaterial({ color: 0x2d6a2d }));
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(0, -0.02, z);
+      return addHO(m);
+    }
+
+    function addHills(z, w, h, color) {
+      const geo = new THREE.CylinderGeometry(0, w * 0.5, h, 6);
+      const mat = new THREE.MeshLambertMaterial({ color });
+      for (let x = -220; x <= 220; x += 55 + Math.random() * 30) {
+        const m = new THREE.Mesh(geo, mat);
+        m.position.set(x, h * 0.5 - 0.5, z);
+        addHO(m);
+      }
+    }
+
+    function addGreen(gx, gz, gr, gelev) {
+      const mh = gelev + 0.3;
+      const mound = new THREE.Mesh(new THREE.CylinderGeometry(gr, gr + 2.5, mh, 32), moundMat);
+      mound.position.set(gx, gelev - mh / 2, gz);
+      mound.receiveShadow = true;
+      addHO(mound);
+      const surf = new THREE.Mesh(new THREE.CircleGeometry(gr, 32), greenMat);
+      surf.rotation.x = -Math.PI / 2;
+      surf.position.set(gx, gelev + 0.001, gz);
+      surf.receiveShadow = true;
+      addHO(surf);
+    }
+
+    function addCupAndFlag(fx, fz, gelev, fcolor) {
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.04, 8, 32), new THREE.MeshLambertMaterial({ color: 0xe8e8e8 }));
+      rim.rotation.x = Math.PI / 2;
+      rim.position.set(fx, gelev + 0.022, fz);
+      addHO(rim);
+      const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.5, 16), new THREE.MeshBasicMaterial({ color: 0x111111 }));
+      cup.position.set(fx, gelev - 0.25, fz);
+      addHO(cup);
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 5.5, 8), new THREE.MeshLambertMaterial({ color: 0xdddddd }));
+      pole.position.set(fx, gelev + 2.75, fz);
+      pole.castShadow = true;
+      addHO(pole);
+      flagMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.8), new THREE.MeshLambertMaterial({ color: fcolor, side: THREE.DoubleSide }));
+      flagMesh.position.set(fx + 0.6, gelev + 5.1, fz);
+      addHO(flagMesh);
+    }
+
+    function addTeeBox(tx, tz, telev, tw, td) {
+      const box = new THREE.Mesh(new THREE.PlaneGeometry(tw + 2, td + 2), new THREE.MeshLambertMaterial({ color: 0x5db85d }));
+      box.rotation.x = -Math.PI / 2;
+      box.position.set(tx, telev + 0.01, tz);
+      box.receiveShadow = true;
+      addHO(box);
+      teePeg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.025, 0.22, 8), new THREE.MeshLambertMaterial({ color: 0xf5c842 }));
+      teePeg.position.set(tx, telev + 0.11, tz);
+      teePeg.castShadow = true;
+      addHO(teePeg);
+    }
+
+    function addBunker(bx, bz, brx, brz) {
+      const m = new THREE.Mesh(new THREE.CircleGeometry(1, 32), sandMat);
+      m.rotation.x = -Math.PI / 2;
+      m.scale.set(brx, 1, brz);
+      m.position.set(bx, 0.005, bz);
+      addHO(m);
+    }
+
+    function addWater(wx, wz, ww, wd) {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(ww, wd), waterMat);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(wx, -0.01, wz);
+      addHO(m);
+      // Sandy shore border
+      const shore = new THREE.Mesh(new THREE.PlaneGeometry(ww + 6, wd + 6), new THREE.MeshLambertMaterial({ color: 0xc4a862 }));
+      shore.rotation.x = -Math.PI / 2;
+      shore.position.set(wx, -0.008, wz);
+      addHO(shore);
+    }
+
+    // ── Per-hole geometry ─────────────────────────────────────────────────────
+    switch (idx) {
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 0: { // MEADOW LANE — Par 3, straight
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = -130; HOLE.green.radius = 9; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = -130; HOLE.flag.color = 0xee4422;
+        HOLE.fairwaySegs = [{ x:0, z:-65, w:24, len:130, ry:0 }];
+        HOLE.rough.flanking = 22;
+        HOLE.mm = { xMin:-40, zMax:8, xRange:80, zRange:156 };
+        HOLE.bunkers = []; HOLE.waterRects = []; HOLE.islandGreen = false;
+        HOLE.checkWater = () => false;
+        HOLE.flyover = [
+          { pos:[28,36,25],   look:[0,2,-55]  },
+          { pos:[14,24,-45],  look:[0,2,-95]  },
+          { pos:[8,15,-100],  look:[0,1,-130] },
+          { pos:[4,8,-100],   look:[0,1,-130] },
+        ];
+        grassTex.repeat.set(6, 20);
+        addPlane(24, 130, grassMat, 0, 0, -65);
+        addPlane(22, 130, roughMat, -(12+11), -0.01, -65);
+        addPlane(22, 130, roughMat,  (12+11), -0.01, -65);
+        addBackdrop(-200);
+        addTeeBox(0,0,0,6,4);
+        addGreen(0,-130,9,0.7);
+        addCupAndFlag(0,-130,0.7,0xee4422);
+        addHills(-210,120,18,0x2d7a2d); addHills(-197,90,12,0x3a8c3a); addHills(-186,70,8,0x4a9e4a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 1: { // ELM RIDGE — Par 4, dogleg left
+        // Bend at z=-110; second segment turns left ~24°
+        const RY = 0.42; // rotation around Y for dogleg
+        const S2CX = -20, S2CZ = -156; // center of seg2 in world space
+        const GX = -42, GZ = -200;
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = GX; HOLE.green.z = GZ; HOLE.green.radius = 9; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = GX; HOLE.flag.z  = GZ; HOLE.flag.color = 0xf07020;
+        HOLE.fairwaySegs = [
+          { x:0, z:-55, w:22, len:110, ry:0 },
+          { x:S2CX, z:S2CZ, w:22, len:100, ry:RY },
+        ];
+        HOLE.rough.flanking = 20;
+        HOLE.mm = { xMin:-75, zMax:10, xRange:110, zRange:230 };
+        HOLE.bunkers = [{ x:-8, z:-108, rx:9, rz:7 }];
+        HOLE.waterRects = []; HOLE.islandGreen = false;
+        HOLE.checkWater = () => false;
+        HOLE.flyover = [
+          { pos:[32,38,24],    look:[0,2,-50]   },
+          { pos:[14,28,-55],   look:[0,2,-105]  },
+          { pos:[-8,22,-138],  look:[-28,2,-175] },
+          { pos:[-22,13,-162], look:[-42,1,-200] },
+        ];
+        grassTex.repeat.set(6, 20);
+        // Seg1: straight
+        addPlane(22, 110, grassMat,  0, 0, -55);
+        addPlane(20, 110, roughMat, -21, -0.01, -55);
+        addPlane(20, 110, roughMat,  21, -0.01, -55);
+        // Seg2: dogleg — wide rough underlay then narrow fairway on top
+        addSeg(S2CX, S2CZ, 62, 100, RY, roughMat, -0.01);
+        addSeg(S2CX, S2CZ, 22, 100, RY, grassMat,  0);
+        addBackdrop(-250);
+        addBunker(-8,-108,9,7);
+        addTeeBox(0,0,0,6,4);
+        addGreen(GX,GZ,9,0.7);
+        addCupAndFlag(GX,GZ,0.7,0xf07020);
+        addHills(-250,120,18,0x2d7a2d); addHills(-235,90,12,0x3a8c3a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 2: { // HIGHLAND FALLS — Par 4, elevated tee (tee at y=8, green at y=0)
+        HOLE.tee.elevation = 8; HOLE.tee.platformW = 8; HOLE.tee.platformD = 6;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = -145; HOLE.green.radius = 9; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = -145; HOLE.flag.color = 0x44aaff;
+        HOLE.fairwaySegs = [{ x:0, z:-72, w:22, len:145, ry:0 }];
+        HOLE.rough.flanking = 20;
+        HOLE.mm = { xMin:-40, zMax:8, xRange:80, zRange:172 };
+        HOLE.bunkers = [{ x:10, z:-128, rx:8, rz:6 }];
+        HOLE.waterRects = []; HOLE.islandGreen = false;
+        HOLE.checkWater = () => false;
+        HOLE.flyover = [
+          { pos:[28,46,24],   look:[0,8,0]    },  // reveal elevated tee first
+          { pos:[20,30,-35],  look:[0,4,-78]  },
+          { pos:[10,18,-105], look:[0,2,-138] },
+          { pos:[5,10,-115],  look:[0,1,-145] },
+        ];
+        grassTex.repeat.set(6, 22);
+        // Elevated tee platform (earthy box + grass cap)
+        const platBox = new THREE.Mesh(
+          new THREE.BoxGeometry(HOLE.tee.platformW + 2, HOLE.tee.elevation, HOLE.tee.platformD + 2),
+          new THREE.MeshLambertMaterial({ color: 0x8b5e3c })
+        );
+        platBox.position.set(0, HOLE.tee.elevation / 2, 0);
+        platBox.castShadow = true; platBox.receiveShadow = true;
+        addHO(platBox);
+        addPlane(HOLE.tee.platformW + 2, HOLE.tee.platformD + 2,
+          new THREE.MeshLambertMaterial({ color: 0x5db85d }),
+          0, HOLE.tee.elevation + 0.01, 0);
+        // Sloped ramp at front of platform
+        const rampGeo = new THREE.BoxGeometry(HOLE.tee.platformW + 2, 0.3, 6);
+        const ramp = new THREE.Mesh(rampGeo, new THREE.MeshLambertMaterial({ color: 0x8b5e3c }));
+        ramp.position.set(0, HOLE.tee.elevation * 0.5 - 0.15, -HOLE.tee.platformD / 2 - 3);
+        ramp.rotation.x = Math.atan2(HOLE.tee.elevation, HOLE.tee.platformD / 2 + 3) * 0.5;
+        addHO(ramp);
+        addPlane(22, 145, grassMat, 0, 0, -72);
+        addPlane(20, 145, roughMat, -21, -0.01, -72);
+        addPlane(20, 145, roughMat,  21, -0.01, -72);
+        addBackdrop(-210);
+        addBunker(10,-128,8,6);
+        addTeeBox(0, 0, HOLE.tee.elevation, 8, 6);
+        addGreen(0,-145,9,0.7);
+        addCupAndFlag(0,-145,0.7,0x44aaff);
+        addHills(-218,120,18,0x2d7a2d); addHills(-204,90,12,0x3a8c3a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 3: { // LAKESIDE — Par 3, water hazard crossing
+        const WX=0, WZ=-85, WW=80, WD=40;
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = -150; HOLE.green.radius = 9; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = -150; HOLE.flag.color = 0xffdd00;
+        HOLE.fairwaySegs = [{ x:0, z:-75, w:22, len:150, ry:0 }];
+        HOLE.rough.flanking = 20;
+        HOLE.mm = { xMin:-42, zMax:8, xRange:84, zRange:178 };
+        HOLE.bunkers = [];
+        HOLE.waterRects = [{ x:WX, z:WZ, w:WW, d:WD }];
+        HOLE.islandGreen = false;
+        HOLE.checkWater = (x, z) => Math.abs(x-WX) < WW/2 && Math.abs(z-WZ) < WD/2;
+        HOLE.flyover = [
+          { pos:[26,34,24],   look:[0,2,-62]  },
+          { pos:[14,24,-58],  look:[0,2,-88]  },  // hover over water
+          { pos:[9,17,-110],  look:[0,2,-143] },
+          { pos:[5,10,-120],  look:[0,1,-150] },
+        ];
+        grassTex.repeat.set(6, 22);
+        addPlane(22, 150, grassMat, 0, 0, -75);
+        addPlane(20, 150, roughMat, -21, -0.01, -75);
+        addPlane(20, 150, roughMat,  21, -0.01, -75);
+        addWater(WX, WZ, WW, WD);
+        addBackdrop(-220);
+        addTeeBox(0,0,0,6,4);
+        addGreen(0,-150,9,0.7);
+        addCupAndFlag(0,-150,0.7,0xffdd00);
+        addHills(-226,120,18,0x2d7a2d); addHills(-210,90,12,0x3a8c3a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 4: { // SANDY PINES — Par 4, two bunkers in landing zone
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = -165; HOLE.green.radius = 9; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = -165; HOLE.flag.color = 0xee4422;
+        HOLE.fairwaySegs = [{ x:0, z:-82, w:24, len:165, ry:0 }];
+        HOLE.rough.flanking = 22;
+        HOLE.mm = { xMin:-42, zMax:8, xRange:84, zRange:192 };
+        HOLE.bunkers = [
+          { x:-12, z:-90,  rx:9, rz:7 },
+          { x: 14, z:-122, rx:8, rz:6 },
+        ];
+        HOLE.waterRects = []; HOLE.islandGreen = false;
+        HOLE.checkWater = () => false;
+        HOLE.flyover = [
+          { pos:[26,34,24],  look:[0,2,-78]  },
+          { pos:[12,24,-68], look:[0,2,-102] },
+          { pos:[8,18,-120], look:[0,2,-150] },
+          { pos:[5,10,-130], look:[0,1,-165] },
+        ];
+        grassTex.repeat.set(6, 24);
+        addPlane(24, 165, grassMat, 0, 0, -82);
+        addPlane(22, 165, roughMat, -(12+11), -0.01, -82);
+        addPlane(22, 165, roughMat,  (12+11), -0.01, -82);
+        addBackdrop(-230);
+        HOLE.bunkers.forEach(b => addBunker(b.x, b.z, b.rx, b.rz));
+        addTeeBox(0,0,0,6,4);
+        addGreen(0,-165,9,0.7);
+        addCupAndFlag(0,-165,0.7,0xee4422);
+        addHills(-234,120,18,0x2d7a2d); addHills(-218,90,12,0x3a8c3a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 5: { // OAK VALLEY — Par 5, long (265 units to green)
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = -265; HOLE.green.radius = 10; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = -265; HOLE.flag.color = 0x22dd44;
+        HOLE.fairwaySegs = [{ x:0, z:-132, w:28, len:265, ry:0 }];
+        HOLE.rough.flanking = 25;
+        HOLE.mm = { xMin:-52, zMax:10, xRange:104, zRange:298 };
+        HOLE.bunkers = [
+          { x:-18, z:-115, rx:10, rz:8 },
+          { x: 16, z:-158, rx: 9, rz:7 },
+        ];
+        HOLE.waterRects = []; HOLE.islandGreen = false;
+        HOLE.checkWater = () => false;
+        HOLE.flyover = [
+          { pos:[35,50,26],   look:[0,4,-100] },
+          { pos:[20,38,-80],  look:[0,3,-162] },
+          { pos:[14,26,-165], look:[0,2,-218] },
+          { pos:[8,14,-222],  look:[0,2,-265] },
+        ];
+        grassTex.repeat.set(7, 32);
+        addPlane(28, 265, grassMat, 0, 0, -132);
+        addPlane(25, 265, roughMat, -(14+12.5), -0.01, -132);
+        addPlane(25, 265, roughMat,  (14+12.5), -0.01, -132);
+        addBackdrop(-330);
+        HOLE.bunkers.forEach(b => addBunker(b.x, b.z, b.rx, b.rz));
+        addTeeBox(0,0,0,6,4);
+        addGreen(0,-265,10,0.7);
+        addCupAndFlag(0,-265,0.7,0x22dd44);
+        addHills(-335,150,22,0x2d7a2d); addHills(-318,115,15,0x3a8c3a); addHills(-305,85,10,0x4a9e4a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 6: { // ISLE GREEN — Par 3, island green surrounded by water
+        const GR = 9, GZ = -135;
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = GZ; HOLE.green.radius = GR; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = GZ; HOLE.flag.color = 0xffffff;
+        HOLE.fairwaySegs = [{ x:0, z:-52, w:12, len:65, ry:0 }];
+        HOLE.rough.flanking = 0;
+        HOLE.mm = { xMin:-42, zMax:8, xRange:84, zRange:162 };
+        HOLE.bunkers = []; HOLE.waterRects = []; HOLE.islandGreen = true;
+        HOLE.checkWater = (x, z) => {
+          if (z > -20) return false;
+          const dg = Math.sqrt((x-0)**2 + (z-GZ)**2);
+          if (dg < GR + 1.2) return false;           // on green island
+          if (z > -118 && Math.abs(x) < 8) return false; // on narrow approach
+          return true;
+        };
+        HOLE.flyover = [
+          { pos:[22,32,24],   look:[0,2,-52]  },
+          { pos:[14,24,-48],  look:[0,2,-98]  },  // show narrow approach
+          { pos:[10,17,-95],  look:[0,2,-135] },  // reveal island
+          { pos:[5,9,-102],   look:[0,1,-135] },
+        ];
+        grassTex.repeat.set(3, 8);
+        // Full ocean plane behind everything
+        const ocean = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), waterMat.clone());
+        ocean.rotation.x = -Math.PI / 2;
+        ocean.position.set(0, -0.015, -100);
+        addHO(ocean);
+        // Narrow approach bridge/path
+        addPlane(12, 65, grassMat, 0, 0.02, -52);
+        // Small wooden dock border (visual only)
+        const dockMat = new THREE.MeshLambertMaterial({ color: 0x8b6914 });
+        [-6.5, 6.5].forEach(sx => {
+          const plank = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.15, 65), dockMat);
+          plank.position.set(sx, 0.1, -52);
+          addHO(plank);
+        });
+        addBackdrop(-200);
+        addTeeBox(0,0,0,6,4);
+        addGreen(0,GZ,GR,0.7);
+        addCupAndFlag(0,GZ,0.7,0xffffff);
+        addHills(-206,120,18,0x2d7a2d); addHills(-193,90,12,0x3a8c3a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 7: { // THE NARROWS — Par 4, extremely tight fairway (10 wide)
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = -165; HOLE.green.radius = 9; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = -165; HOLE.flag.color = 0xee4422;
+        HOLE.fairwaySegs = [{ x:0, z:-82, w:10, len:165, ry:0 }];
+        HOLE.rough.flanking = 32;
+        HOLE.mm = { xMin:-44, zMax:8, xRange:88, zRange:192 };
+        HOLE.bunkers = [];
+        HOLE.waterRects = []; HOLE.islandGreen = false;
+        HOLE.checkWater = () => false;
+        HOLE.flyover = [
+          { pos:[20,32,24],   look:[0,2,-70]  },
+          { pos:[10,22,-60],  look:[0,2,-108] },
+          { pos:[6,16,-112],  look:[0,2,-148] },
+          { pos:[4,10,-128],  look:[0,1,-165] },
+        ];
+        grassTex.repeat.set(3, 20);
+        // Deep rough walls — dark to emphasize the narrow corridor
+        addPlane(32, 165, new THREE.MeshLambertMaterial({ color: 0x1e4a1e }), -(5+16), -0.01, -82);
+        addPlane(32, 165, new THREE.MeshLambertMaterial({ color: 0x1e4a1e }),  (5+16), -0.01, -82);
+        // Narrow fairway strip on top
+        addPlane(10, 165, grassMat, 0, 0, -82);
+        addBackdrop(-230);
+        addTeeBox(0,0,0,6,4);
+        addGreen(0,-165,9,0.7);
+        addCupAndFlag(0,-165,0.7,0xee4422);
+        addHills(-234,120,18,0x2d7a2d); addHills(-218,90,12,0x3a8c3a);
+        break;
+      }
+
+      // ────────────────────────────────────────────────────────────────────────
+      case 8: { // CHERRY HILL — Par 4, final challenge: water + two bunkers
+        const WX=0, WZ=-82, WW=72, WD=36;
+        HOLE.tee.elevation = 0; HOLE.tee.platformW = 6; HOLE.tee.platformD = 4;
+        HOLE.tee.x = 0; HOLE.tee.z = 0;
+        HOLE.green.x = 0; HOLE.green.z = -188; HOLE.green.radius = 9; HOLE.green.elevation = 0.7;
+        HOLE.flag.x  = 0; HOLE.flag.z  = -188; HOLE.flag.color = 0xdd2222;
+        HOLE.fairwaySegs = [{ x:0, z:-94, w:20, len:188, ry:0 }];
+        HOLE.rough.flanking = 22;
+        HOLE.mm = { xMin:-42, zMax:8, xRange:84, zRange:216 };
+        HOLE.bunkers = [
+          { x: 14, z:-122, rx:9, rz:7 },
+          { x:-12, z:-154, rx:8, rz:6 },
+        ];
+        HOLE.waterRects = [{ x:WX, z:WZ, w:WW, d:WD }];
+        HOLE.islandGreen = false;
+        HOLE.checkWater = (x, z) => Math.abs(x-WX) < WW/2 && Math.abs(z-WZ) < WD/2;
+        HOLE.flyover = [
+          { pos:[28,36,24],   look:[0,2,-80]  },
+          { pos:[16,26,-65],  look:[0,2,-100] },  // over water
+          { pos:[10,20,-135], look:[0,2,-172] },
+          { pos:[6,12,-156],  look:[0,1,-188] },
+        ];
+        grassTex.repeat.set(5, 22);
+        addPlane(20, 188, grassMat, 0, 0, -94);
+        addPlane(22, 188, roughMat, -(10+11), -0.01, -94);
+        addPlane(22, 188, roughMat,  (10+11), -0.01, -94);
+        addWater(WX, WZ, WW, WD);
+        addBackdrop(-252);
+        HOLE.bunkers.forEach(b => addBunker(b.x, b.z, b.rx, b.rz));
+        addTeeBox(0,0,0,6,4);
+        addGreen(0,-188,9,0.7);
+        addCupAndFlag(0,-188,0.7,0xdd2222);
+        addHills(-256,120,18,0x2d7a2d); addHills(-240,90,12,0x3a8c3a);
+        break;
+      }
+    } // end switch
+
+    // ── Reset ball to tee for this hole ───────────────────────────────────────
+    ball.visible = true;
+    ball.position.set(HOLE.tee.x, HOLE.tee.elevation + BALL_RADIUS + 0.115, HOLE.tee.z);
+    ball.rotation.set(0, 0, 0);
+    ball.scale.setScalar(1);
+    vel.set(0, 0, 0);
+    bounceCount = 0; aimAngle = 0; currentClub = 'driver';
+    if (teePeg) teePeg.visible = true;
+    distText.style.transition = 'none'; distText.style.opacity = '0';
+    resetBtn.style.display  = 'none';
+    powerWrap.style.display = 'none';   // hidden during preview
+    updateClubSelector(); updateBlobShadow();
+
+    // ── Start fly-over preview ────────────────────────────────────────────────
+    state    = 'preview';
+    previewT = 0;
+    previewOverlay.style.opacity = '1';
+    document.getElementById('preview-hole-name').textContent =
+      'HOLE ' + (idx + 1) + '  —  ' + COURSE[idx].name;
+    document.getElementById('preview-par-info').textContent =
+      'PAR ' + COURSE[idx].par + '  ·  ' + COURSE[idx].yardage + ' YDS';
+    // Snap camera to first waypoint immediately
+    const wp0 = HOLE.flyover[0];
+    camera.position.set(wp0.pos[0], wp0.pos[1], wp0.pos[2]);
+    camera.lookAt(wp0.look[0], wp0.look[1], wp0.look[2]);
+    camCurrent.set(wp0.pos[0], wp0.pos[1], wp0.pos[2]);
+    lookCurrent.set(wp0.look[0], wp0.look[1], wp0.look[2]);
+  }
+
+  // ─── End preview, hand off to play ───────────────────────────────────────────
+  function endPreview() {
+    state = 'idle';
+    previewOverlay.style.opacity = '0';
+    const tx = HOLE.tee.x, ty = HOLE.tee.elevation, tz = HOLE.tee.z;
+    camCurrent.set(tx, ty + 3.5, tz + 10);
+    lookCurrent.set(tx, ty + 0.5, tz - 10);
+    camera.position.copy(camCurrent);
+    camera.lookAt(lookCurrent.x, lookCurrent.y, lookCurrent.z);
+    powerWrap.style.display = 'block';
+    updateStrokeCounter();
+    strokeCounterEl.style.display = 'block';
+  }
+
+  // ─── Preview camera interpolation ────────────────────────────────────────────
+  function updatePreviewCamera(t) {
+    const wps = HOLE.flyover, n = wps.length - 1;
+    const sc  = t * n;
+    const i   = Math.min(Math.floor(sc), n - 1);
+    const f   = sc - i;
+    const a   = wps[i], b = wps[i + 1];
+    const lp  = (a, b, t) => a + (b - a) * t;
+    camera.position.set(lp(a.pos[0],b.pos[0],f), lp(a.pos[1],b.pos[1],f), lp(a.pos[2],b.pos[2],f));
+    camera.lookAt(lp(a.look[0],b.look[0],f), lp(a.look[1],b.look[1],f), lp(a.look[2],b.look[2],f));
+  }
+
+  // ─── Ground elevation (green mound + elevated tee platform) ──────────────────
+  function getGroundY(x, z) {
+    const dx = x - HOLE.green.x, dz = z - HOLE.green.z;
+    if (Math.sqrt(dx*dx + dz*dz) < HOLE.green.radius - 0.3) return HOLE.green.elevation;
+    if (HOLE.tee.elevation > 0) {
+      if (Math.abs(x - HOLE.tee.x) < HOLE.tee.platformW / 2 &&
+          Math.abs(z - HOLE.tee.z) < HOLE.tee.platformD / 2) {
+        return HOLE.tee.elevation;
+      }
+    }
+    return 0;
+  }
+
+  // ─── Bunker check ─────────────────────────────────────────────────────────────
+  function isInBunker(x, z) {
+    for (const b of HOLE.bunkers) {
+      const dx = (x - b.x) / b.rx, dz = (z - b.z) / b.rz;
+      if (dx*dx + dz*dz < 1) return true;
+    }
+    return false;
+  }
+
+  // ─── Blob shadow ─────────────────────────────────────────────────────────────
+  function updateBlobShadow() {
+    ballShadow.position.x = ball.position.x;
+    ballShadow.position.z = ball.position.z;
+    const gy = getGroundY(ball.position.x, ball.position.z);
+    ballShadow.position.y = gy + 0.021;
+    const h = Math.max(0, ball.position.y - BALL_RADIUS - gy);
+    ballShadow.scale.setScalar(Math.max(0.12, 1.0 - h * 0.022));
+    shadowMat.opacity = Math.max(0.03, 0.38 - h * 0.009);
+  }
 
   // ─── Club logic ──────────────────────────────────────────────────────────────
   function isOnGreen() {
-    const dx = ball.position.x - HOLE.green.x;
-    const dz = ball.position.z - HOLE.green.z;
-    return Math.sqrt(dx * dx + dz * dz) < HOLE.green.radius;
+    const dx = ball.position.x - HOLE.green.x, dz = ball.position.z - HOLE.green.z;
+    return Math.sqrt(dx*dx + dz*dz) < HOLE.green.radius;
   }
-
   function setClub(key) {
-    if (!CLUBS[key]) return;
-    if (CLUBS[key].onGreenOnly && !isOnGreen()) return;
-    currentClub = key;
-    updateClubSelector();
+    if (!CLUBS[key] || (CLUBS[key].onGreenOnly && !isOnGreen())) return;
+    currentClub = key; updateClubSelector();
   }
-
   function updateClubSelector() {
     const onGreen = isOnGreen();
     document.querySelectorAll('.club-btn').forEach(btn => {
@@ -697,7 +1014,6 @@
       document.querySelectorAll('.club-btn').forEach(b => b.classList.toggle('active', b.dataset.club === 'driver'));
     }
   }
-
   document.querySelectorAll('.club-btn').forEach(btn => {
     btn.addEventListener('click',     e => { e.stopPropagation(); setClub(btn.dataset.club); });
     btn.addEventListener('mousedown', e => e.stopPropagation());
@@ -705,11 +1021,10 @@
   });
 
   // ─── Flash helpers ───────────────────────────────────────────────────────────
-  function flashText(el, msg, duration = 1400) {
+  function flashText(el, msg, duration) {
     el.textContent = msg;
-    el.style.transition = 'none';
-    el.style.opacity    = '1';
-    setTimeout(() => { el.style.transition = 'opacity 0.9s'; el.style.opacity = '0'; }, duration);
+    el.style.transition = 'none'; el.style.opacity = '1';
+    setTimeout(() => { el.style.transition = 'opacity 0.9s'; el.style.opacity = '0'; }, duration || 1400);
   }
 
   function showStopped() {
@@ -718,23 +1033,49 @@
     resetBtn.style.display = 'block';
     updateClubSelector();
     setTimeout(() => {
-      if (state === 'stopped') {
-        state = 'idle';
-        powerWrap.style.display = 'block';
-      }
+      if (state === 'stopped') { state = 'idle'; powerWrap.style.display = 'block'; }
     }, 1500);
   }
 
+  // ─── Reset to tee ────────────────────────────────────────────────────────────
+  function resetBallToTee() {
+    ball.visible = true;
+    ball.position.set(HOLE.tee.x, HOLE.tee.elevation + BALL_RADIUS + 0.115, HOLE.tee.z);
+    ball.rotation.set(0, 0, 0); ball.scale.setScalar(1);
+    vel.set(0, 0, 0); bounceCount = 0; aimAngle = 0;
+    state = 'idle';
+    if (teePeg) teePeg.visible = true;
+    currentClub = 'driver';
+    distText.style.transition = 'none'; distText.style.opacity = '0';
+    resetBtn.style.display  = 'none';
+    powerWrap.style.display = 'block';
+    camCurrent.set(HOLE.tee.x, HOLE.tee.elevation + 3.5, HOLE.tee.z + 10);
+    lookCurrent.set(HOLE.tee.x, HOLE.tee.elevation + 0.5, HOLE.tee.z - 10);
+    updateClubSelector(); updateBlobShadow(); updateStrokeCounter();
+    strokeCounterEl.style.display = 'block';
+  }
+
   function reset() {
-    if (state === 'sinking' || state === 'holed') return;
+    if (state === 'sinking' || state === 'holed' || state === 'preview' || state === 'penalty') return;
     resetBallToTee();
+  }
+
+  // ─── Water penalty ───────────────────────────────────────────────────────────
+  function waterPenalty() {
+    state = 'penalty';
+    vel.set(0, 0, 0);
+    strokeCount++;
+    updateStrokeCounter();
+    powerWrap.style.display = 'none';
+    resetBtn.style.display  = 'none';
+    flashText(shotText, 'WATER  +1', 2000);
+    setTimeout(resetBallToTee, 2100);
   }
 
   // ─── Input ───────────────────────────────────────────────────────────────────
   function startCharge() {
     if (state !== 'idle') return;
-    state       = 'charging';
-    chargeStart = performance.now() / 1000;
+    state = 'charging'; chargeStart = performance.now() / 1000;
   }
 
   function releaseSwing() {
@@ -743,57 +1084,46 @@
     const elapsed = performance.now() / 1000 - chargeStart;
     const power   = Math.min(1, elapsed / club.maxTime);
     if (power < 0.04) { state = 'idle'; return; }
-
     const speed  = THREE.MathUtils.lerp(club.minSpeed, club.maxSpeed, power);
     const hSpeed = speed * Math.cos(club.angle);
     const vSpeed = speed * Math.sin(club.angle);
-    const dirX   =  Math.sin(aimAngle);
-    const dirZ   = -Math.cos(aimAngle);
-
-    vel.set(dirX * hSpeed, vSpeed, dirZ * hSpeed);
+    vel.set(Math.sin(aimAngle) * hSpeed, vSpeed, -Math.cos(aimAngle) * hSpeed);
     flightAimAngle = aimAngle;
-
-    strokeCount++;
-    updateStrokeCounter();
-    bounceCount = 0;
-    state       = 'flying';
-    teePeg.visible       = false;
+    strokeCount++; updateStrokeCounter();
+    bounceCount = 0; state = 'flying';
+    if (teePeg) teePeg.visible = false;
     powerWrap.style.display = 'none';
     flashText(shotText, 'FORE!', 700);
   }
 
-  // Keyboard
   window.addEventListener('keydown', e => {
     keysHeld.add(e.code);
-    if (e.code === 'Space' && !e.repeat) { e.preventDefault(); startCharge(); }
-    if (e.code === 'KeyR')  reset();
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (state === 'preview') { endPreview(); return; }
+      if (!e.repeat) startCharge();
+    }
+    if (e.code === 'KeyR') reset();
     if (e.code === 'Digit1') setClub('driver');
     if (e.code === 'Digit2') setClub('iron');
     if (e.code === 'Digit3') setClub('wedge');
     if (e.code === 'Digit4') setClub('putter');
     if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') e.preventDefault();
   });
-  window.addEventListener('keyup', e => {
-    keysHeld.delete(e.code);
-    if (e.code === 'Space') releaseSwing();
-  });
+  window.addEventListener('keyup', e => { keysHeld.delete(e.code); if (e.code === 'Space') releaseSwing(); });
 
-  // Mouse: drag = aim, click = charge/swing
   renderer.domElement.addEventListener('mousedown', e => {
     if (e.button !== 0) return;
-    isDraggingAim = false;
-    aimDragLastX  = e.clientX;
-    startCharge();
+    if (state === 'preview') { endPreview(); return; }
+    isDraggingAim = false; aimDragLastX = e.clientX; startCharge();
   });
   window.addEventListener('mousemove', e => {
-    if (!(e.buttons & 1)) return;
-    if (state !== 'idle' && state !== 'charging') return;
+    if (!(e.buttons & 1) || (state !== 'idle' && state !== 'charging')) return;
     const dx = e.clientX - aimDragLastX;
     if (Math.abs(dx) > 3) {
       isDraggingAim = true;
-      if (state === 'charging') state = 'idle'; // cancel charge, just aim
-      aimAngle += dx * 0.004;
-      aimAngle  = THREE.MathUtils.clamp(aimAngle, -Math.PI * 0.6, Math.PI * 0.6);
+      if (state === 'charging') state = 'idle';
+      aimAngle = THREE.MathUtils.clamp(aimAngle + dx * 0.004, -Math.PI * 0.6, Math.PI * 0.6);
       aimDragLastX = e.clientX;
     }
   });
@@ -805,137 +1135,179 @@
   });
   resetBtn.addEventListener('click', reset);
 
-  // ─── Ground elevation helper ──────────────────────────────────────────────────
-  function getGroundY(x, z) {
-    const dx = x - HOLE.green.x, dz = z - HOLE.green.z;
-    return (Math.sqrt(dx*dx + dz*dz) < HOLE.green.radius - 0.3) ? HOLE.green.elevation : 0;
-  }
-
-  // ─── Blob shadow ─────────────────────────────────────────────────────────────
-  function updateBlobShadow() {
-    ballShadow.position.x = ball.position.x;
-    ballShadow.position.z = ball.position.z;
-    const gy      = getGroundY(ball.position.x, ball.position.z);
-    ballShadow.position.y = gy + 0.021;
-    const height  = Math.max(0, ball.position.y - BALL_RADIUS - gy);
-    ballShadow.scale.setScalar(Math.max(0.12, 1.0 - height * 0.022));
-    shadowMat.opacity = Math.max(0.03, 0.38 - height * 0.009);
-  }
-
   // ─── Trajectory simulation ───────────────────────────────────────────────────
   function getTrajectoryPoints() {
     const club  = CLUBS[currentClub];
-    const power = (state === 'charging')
-      ? Math.min(1, (performance.now()/1000 - chargeStart) / club.maxTime)
-      : 0.78;
+    const power = (state === 'charging') ? Math.min(1, (performance.now()/1000 - chargeStart) / club.maxTime) : 0.78;
     const speed  = THREE.MathUtils.lerp(club.minSpeed, club.maxSpeed, power);
     const hSpeed = speed * Math.cos(club.angle);
-    const dirX   =  Math.sin(aimAngle);
-    const dirZ   = -Math.cos(aimAngle);
-
-    let px = ball.position.x, py = ball.position.y, pz = ball.position.z;
-    let pvy = speed * Math.sin(club.angle);
-    const SIM_DT = 0.07;
+    const dirX = Math.sin(aimAngle), dirZ = -Math.cos(aimAngle);
+    let px = ball.position.x, py = ball.position.y, pz = ball.position.z, pvy = speed * Math.sin(club.angle);
     const pts = [[px, py, pz]];
     for (let i = 0; i < ARC_CAP - 1; i++) {
-      pvy += GRAVITY * SIM_DT;
-      px  += dirX * hSpeed * SIM_DT;
-      py  += pvy  * SIM_DT;
-      pz  += dirZ * hSpeed * SIM_DT;
-      const floorY = getGroundY(px, pz) + BALL_RADIUS;
-      if (py <= floorY) { pts.push([px, floorY, pz]); break; }
+      pvy += GRAVITY * 0.07; px += dirX * hSpeed * 0.07; py += pvy * 0.07; pz += dirZ * hSpeed * 0.07;
+      const fy = getGroundY(px, pz) + BALL_RADIUS;
+      if (py <= fy) { pts.push([px, fy, pz]); break; }
       pts.push([px, py, pz]);
     }
     return pts;
   }
 
-  // ─── Aim line update ─────────────────────────────────────────────────────────
+  // ─── Aim visuals ─────────────────────────────────────────────────────────────
   function updateAimVisuals() {
     const vis = (state === 'idle' || state === 'charging');
-    aimLine.visible       = vis;
-    aimArrowGroup.visible = vis;
-    arcLine.visible       = vis;
+    aimLine.visible = vis; aimArrowGroup.visible = vis; arcLine.visible = vis;
     if (!vis) { arcLineGeo.setDrawRange(0, 0); return; }
-
-    const club   = CLUBS[currentClub];
-    const lineLen = 5 + club.maxSpeed * 0.20;
-    const dirX   =  Math.sin(aimAngle);
-    const dirZ   = -Math.cos(aimAngle);
-    const aimPos = aimLineGeo.attributes.position;
-
+    const club = CLUBS[currentClub], lineLen = 5 + club.maxSpeed * 0.20;
+    const dirX = Math.sin(aimAngle), dirZ = -Math.cos(aimAngle);
+    const ap = aimLineGeo.attributes.position;
     for (let i = 0; i < AIM_PTS; i++) {
-      const t  = i / (AIM_PTS - 1);
-      const wx = ball.position.x + dirX * t * lineLen;
-      const wz = ball.position.z + dirZ * t * lineLen;
-      aimPos.setXYZ(i, wx, getGroundY(wx, wz) + 0.06, wz);
+      const t = i / (AIM_PTS - 1);
+      const wx = ball.position.x + dirX * t * lineLen, wz = ball.position.z + dirZ * t * lineLen;
+      ap.setXYZ(i, wx, getGroundY(wx, wz) + 0.06, wz);
     }
-    aimPos.needsUpdate = true;
-    aimLine.computeLineDistances();
-
-    // Arrow at end
-    const ex = ball.position.x + dirX * lineLen;
-    const ez = ball.position.z + dirZ * lineLen;
+    ap.needsUpdate = true; aimLine.computeLineDistances();
+    const ex = ball.position.x + dirX * lineLen, ez = ball.position.z + dirZ * lineLen;
     aimArrowGroup.position.set(ex, getGroundY(ex, ez) + 0.22, ez);
-    // rotation.y = -aimAngle: rotates cone (default -Z) to aim direction (sin, 0, -cos)
     aimArrowGroup.rotation.y = -aimAngle;
-
-    // Arc
-    const pts    = getTrajectoryPoints();
-    const arcPos = arcLineGeo.attributes.position;
-    const cnt    = Math.min(pts.length, ARC_CAP);
+    const pts = getTrajectoryPoints(), arcPos = arcLineGeo.attributes.position;
+    const cnt = Math.min(pts.length, ARC_CAP);
     for (let i = 0; i < cnt; i++) arcPos.setXYZ(i, pts[i][0], pts[i][1] + 0.05, pts[i][2]);
-    arcPos.needsUpdate = true;
-    arcLineGeo.setDrawRange(0, cnt);
+    arcPos.needsUpdate = true; arcLineGeo.setDrawRange(0, cnt);
+  }
+
+  // ─── Cup collision ────────────────────────────────────────────────────────────
+  function checkCupCollision() {
+    const dx = ball.position.x - HOLE.flag.x, dz = ball.position.z - HOLE.flag.z;
+    return Math.sqrt(dx*dx + dz*dz) < 0.27 && ball.position.y < HOLE.green.elevation + 0.8;
+  }
+
+  // ─── Physics ─────────────────────────────────────────────────────────────────
+  function stepPhysics(dt) {
+    if (state === 'sinking') {
+      sinkTimer += dt;
+      const p = Math.min(1, sinkTimer / 0.45);
+      ball.position.y = sinkStartY - p * 0.6;
+      ball.scale.setScalar(1 - p * 0.85);
+      if (p >= 1) {
+        ball.visible = false; ball.scale.setScalar(1);
+        state = 'holed'; setTimeout(showScorecard, 350);
+      }
+      updateBlobShadow(); return;
+    }
+    if (state === 'penalty' || state === 'preview') return;
+    if (state !== 'flying' && state !== 'rolling') return;
+
+    if (state === 'flying') {
+      vel.y += GRAVITY * dt;
+      ball.position.addScaledVector(vel, dt);
+      ball.rotation.x -= vel.z * dt * 3.5; ball.rotation.z += vel.x * dt * 3.5;
+      const floorY = getGroundY(ball.position.x, ball.position.z) + BALL_RADIUS;
+      if (ball.position.y <= floorY) {
+        ball.position.y = floorY;
+        if (HOLE.checkWater(ball.position.x, ball.position.z)) { waterPenalty(); return; }
+        if (checkCupCollision()) { holeBall(); return; }
+        if (Math.abs(vel.y) > 1.8 && bounceCount < 3) {
+          vel.y *= -BOUNCE_RESTITUTION; vel.x *= 0.80; vel.z *= 0.85; bounceCount++;
+        } else { vel.y = 0; state = 'rolling'; }
+      }
+    }
+
+    if (state === 'rolling') {
+      if (HOLE.checkWater(ball.position.x, ball.position.z)) { waterPenalty(); return; }
+      if (checkCupCollision()) { holeBall(); return; }
+      ball.position.addScaledVector(vel, dt);
+      ball.rotation.x -= vel.z * dt * 3.5; ball.rotation.z += vel.x * dt * 3.5;
+      const fric = isInBunker(ball.position.x, ball.position.z) ? SAND_FRICTION : ROLL_FRICTION;
+      const f = Math.pow(fric, dt * 60);
+      vel.x *= f; vel.z *= f; vel.y = 0;
+      ball.position.y = getGroundY(ball.position.x, ball.position.z) + BALL_RADIUS;
+      if (Math.sqrt(vel.x*vel.x + vel.z*vel.z) < STOP_SPEED) {
+        if (isInBunker(ball.position.x, ball.position.z)) flashText(shotText, 'BUNKER', 1200);
+        vel.set(0, 0, 0); state = 'stopped'; showStopped();
+      }
+    }
+    updateBlobShadow();
+  }
+
+  // ─── Camera ──────────────────────────────────────────────────────────────────
+  function updateCamera(dt, t) {
+    if (state === 'preview') return; // handled by updatePreviewCamera
+    let targetPos, targetLook, lerpK;
+
+    if (state === 'idle' || state === 'charging') {
+      const bob = Math.sin(t * 0.4) * 0.04;
+      targetPos  = new THREE.Vector3(ball.position.x - Math.sin(aimAngle)*10, ball.position.y + 3.5 + bob, ball.position.z + Math.cos(aimAngle)*10);
+      targetLook = new THREE.Vector3(ball.position.x + Math.sin(aimAngle)*8,  ball.position.y + 0.5, ball.position.z - Math.cos(aimAngle)*8);
+      lerpK = 5;
+    } else if (state === 'stopped' || state === 'penalty') {
+      targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 3.2, ball.position.z + 10);
+      targetLook = new THREE.Vector3(ball.position.x, ball.position.y + 0.3, ball.position.z - 12);
+      lerpK = 1.5;
+    } else if (state === 'sinking' || state === 'holed') {
+      targetPos  = new THREE.Vector3(HOLE.flag.x + 3, HOLE.green.elevation + 4, HOLE.flag.z + 7);
+      targetLook = new THREE.Vector3(HOLE.flag.x, HOLE.green.elevation + 0.3, HOLE.flag.z);
+      lerpK = 2.5;
+    } else {
+      targetPos  = new THREE.Vector3(ball.position.x - Math.sin(flightAimAngle)*12, ball.position.y + 4.8, ball.position.z + Math.cos(flightAimAngle)*12);
+      targetLook = new THREE.Vector3(ball.position.x + Math.sin(flightAimAngle)*18, ball.position.y - 0.5, ball.position.z - Math.cos(flightAimAngle)*18);
+      lerpK = 4.5;
+    }
+    camCurrent.lerp(targetPos, dt * lerpK);
+    lookCurrent.lerp(targetLook, dt * lerpK);
+    camera.position.copy(camCurrent);
+    camera.lookAt(lookCurrent);
+  }
+
+  // ─── Power bar & aiming ───────────────────────────────────────────────────────
+  function updatePowerBar() {
+    const club = CLUBS[currentClub];
+    if (state === 'charging') powerFill.style.width = Math.min(100, (performance.now()/1000 - chargeStart) / club.maxTime * 100) + '%';
+    else if (state === 'idle') powerFill.style.width = '0%';
+  }
+  function updateAiming(dt) {
+    if (state !== 'idle' && state !== 'charging') return;
+    const S = 1.6;
+    if (keysHeld.has('ArrowLeft'))  aimAngle -= S * dt;
+    if (keysHeld.has('ArrowRight')) aimAngle += S * dt;
+    aimAngle = THREE.MathUtils.clamp(aimAngle, -Math.PI * 0.6, Math.PI * 0.6);
   }
 
   // ─── Scoring helpers ─────────────────────────────────────────────────────────
-  function getDiffLabel(strokes, par) {
-    const d = strokes - par;
-    if (strokes === 1) return 'HOLE IN ONE!';
-    if (d <= -2)       return 'EAGLE';
-    if (d === -1)      return 'BIRDIE';
-    if (d ===  0)      return 'PAR';
-    if (d ===  1)      return 'BOGEY';
-    if (d ===  2)      return 'DOUBLE BOGEY';
+  function getDiffLabel(s, par) {
+    const d = s - par;
+    if (s === 1)  return 'HOLE IN ONE!';
+    if (d <= -2)  return 'EAGLE';
+    if (d === -1) return 'BIRDIE';
+    if (d ===  0) return 'PAR';
+    if (d ===  1) return 'BOGEY';
+    if (d ===  2) return 'DOUBLE BOGEY';
     return '+' + d;
   }
-
-  function diffClass(strokes, par) {
-    const d = strokes - par;
-    if (strokes === 1 || d <= -2) return 'sc-eagle';
+  function diffClass(s, par) {
+    const d = s - par;
+    if (s === 1 || d <= -2) return 'sc-eagle';
     if (d === -1) return 'sc-birdie';
     if (d ===  0) return 'sc-par';
     if (d ===  1) return 'sc-bogey';
     if (d ===  2) return 'sc-double';
     return 'sc-worse';
   }
-
-  function formatDiff(d) {
-    if (d === 0) return 'E';
-    return (d > 0 ? '+' : '') + d;
-  }
-
-  function updateStrokeCounter() {
-    strokeCounterEl.textContent = strokeCount > 0 ? 'STROKES: ' + strokeCount : '';
-  }
-
+  function formatDiff(d) { return d === 0 ? 'E' : (d > 0 ? '+' : '') + d; }
+  function updateStrokeCounter() { strokeCounterEl.textContent = strokeCount > 0 ? 'STROKES: ' + strokeCount : ''; }
   function updateHUD() {
     const h = COURSE[currentHoleIdx];
     document.querySelector('#hud h1').textContent = h.name;
-    document.querySelector('#hud p').textContent  =
-      'HOLE ' + (currentHoleIdx + 1) + '  ·  PAR ' + h.par + '  ·  ' + h.yardage + ' YDS';
+    document.querySelector('#hud p').textContent  = 'HOLE ' + (currentHoleIdx+1) + '  ·  PAR ' + h.par + '  ·  ' + h.yardage + ' YDS';
   }
+  function updateMinimapLabel() { document.getElementById('minimap-label').textContent = 'HOLE ' + (currentHoleIdx+1); }
 
-  function updateMinimapLabel() {
-    document.getElementById('minimap-label').textContent = 'HOLE ' + (currentHoleIdx + 1);
-  }
-
+  // ─── Particles ───────────────────────────────────────────────────────────────
   function triggerParticles() {
     const cx = HOLE.flag.x, cy = HOLE.green.elevation, cz = HOLE.flag.z;
     for (let i = 0; i < N_PARTICLES; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const s = 2 + Math.random() * 6;
-      partVelArr[i].set(Math.cos(a) * s * 0.7, 3 + Math.random() * 9, Math.sin(a) * s * 0.7);
+      const a = Math.random() * Math.PI * 2, s = 2 + Math.random() * 6;
+      partVelArr[i].set(Math.cos(a)*s*0.7, 3+Math.random()*9, Math.sin(a)*s*0.7);
       partPosBuf[i*3] = cx; partPosBuf[i*3+1] = cy; partPosBuf[i*3+2] = cz;
       const c = new THREE.Color().setHSL(Math.random(), 1.0, 0.60);
       partColBuf[i*3] = c.r; partColBuf[i*3+1] = c.g; partColBuf[i*3+2] = c.b;
@@ -945,33 +1317,29 @@
     partActive = true; partTime = 0;
     particles.visible = true; partMat.opacity = 1.0;
   }
-
   function updateParticles(dt) {
     if (!partActive) return;
     partTime += dt;
     if (partTime > PART_LIFE) { partActive = false; particles.visible = false; return; }
-    partMat.opacity = Math.min(1.0, Math.max(0, 1 - (partTime - (PART_LIFE - 0.8)) / 0.8));
+    partMat.opacity = Math.min(1, Math.max(0, 1 - (partTime - (PART_LIFE - 0.8)) / 0.8));
     for (let i = 0; i < N_PARTICLES; i++) {
       partVelArr[i].y += GRAVITY * 0.45 * dt;
       partPosBuf[i*3]   += partVelArr[i].x * dt;
       partPosBuf[i*3+1] += partVelArr[i].y * dt;
       partPosBuf[i*3+2] += partVelArr[i].z * dt;
       if (partPosBuf[i*3+1] < HOLE.green.elevation + 0.05) {
-        partPosBuf[i*3+1] = HOLE.green.elevation + 0.05;
-        partVelArr[i].y *= -0.3;
+        partPosBuf[i*3+1] = HOLE.green.elevation + 0.05; partVelArr[i].y *= -0.3;
       }
     }
     partGeo.attributes.position.needsUpdate = true;
   }
 
+  // ─── Hole-in logic ────────────────────────────────────────────────────────────
   function holeBall() {
     scores[currentHoleIdx] = strokeCount;
-    sinkStartY = ball.position.y;
-    sinkTimer  = 0;
-    state      = 'sinking';
-    vel.set(0, 0, 0);
-    powerWrap.style.display = 'none';
-    resetBtn.style.display  = 'none';
+    sinkStartY = ball.position.y; sinkTimer = 0;
+    state = 'sinking'; vel.set(0, 0, 0);
+    powerWrap.style.display = 'none'; resetBtn.style.display = 'none';
     triggerParticles();
     flashText(shotText, getDiffLabel(strokeCount, COURSE[currentHoleIdx].par), 2200);
   }
@@ -986,271 +1354,141 @@
       const tr = document.createElement('tr');
       totalPar += h.par;
       if (s !== undefined) {
-        totalStrokes += s;
-        tr.className = diffClass(s, h.par);
-        tr.innerHTML = '<td>' + (i+1) + '</td><td>' + h.par + '</td><td>' + h.yardage +
-          '</td><td>' + s + '</td><td>' + formatDiff(s - h.par) + '</td>';
+        totalStrokes += s; tr.className = diffClass(s, h.par);
+        tr.innerHTML = '<td>'+(i+1)+'</td><td>'+h.par+'</td><td>'+h.yardage+'</td><td>'+s+'</td><td>'+formatDiff(s-h.par)+'</td>';
       } else {
         tr.className = 'sc-future';
-        tr.innerHTML = '<td>' + (i+1) + '</td><td>' + h.par + '</td><td>' + h.yardage +
-          '</td><td>-</td><td></td>';
+        tr.innerHTML = '<td>'+(i+1)+'</td><td>'+h.par+'</td><td>'+h.yardage+'</td><td>-</td><td></td>';
       }
       tbody.appendChild(tr);
     }
     const isLast = currentHoleIdx >= COURSE.length - 1;
-    const cumDiff = scores.length > 0 ? formatDiff(totalStrokes - totalPar) : '';
-    tfoot.innerHTML = '<tr class="sc-total"><td colspan="3">TOTAL</td><td>' +
-      (totalStrokes || '-') + '</td><td>' + cumDiff + '</td></tr>';
-    document.getElementById('scorecard-title').textContent =
-      isLast ? 'ROUND COMPLETE' : 'HOLE ' + (currentHoleIdx + 1) + ' COMPLETE';
-    document.getElementById('next-hole-btn').style.display    = isLast ? 'none'         : 'inline-block';
-    document.getElementById('play-again-btn').style.display   = isLast ? 'inline-block' : 'none';
+    tfoot.innerHTML = '<tr class="sc-total"><td colspan="3">TOTAL</td><td>'+(totalStrokes||'-')+'</td><td>'+(scores.length>0?formatDiff(totalStrokes-totalPar):'')+'</td></tr>';
+    document.getElementById('scorecard-title').textContent = isLast ? 'ROUND COMPLETE' : 'HOLE '+(currentHoleIdx+1)+' COMPLETE';
+    document.getElementById('next-hole-btn').style.display  = isLast ? 'none' : 'inline-block';
+    document.getElementById('play-again-btn').style.display = isLast ? 'inline-block' : 'none';
     document.getElementById('scorecard-overlay').style.display = 'flex';
     strokeCounterEl.style.display = 'none';
   }
-
-  function hideScorecard() {
-    document.getElementById('scorecard-overlay').style.display = 'none';
-  }
-
-  function resetBallToTee() {
-    ball.visible = true;
-    ball.position.set(0, BALL_RADIUS + 0.115, 0);
-    ball.rotation.set(0, 0, 0);
-    ball.scale.setScalar(1);
-    vel.set(0, 0, 0);
-    bounceCount = 0; aimAngle = 0;
-    state = 'idle';
-    teePeg.visible = true; currentClub = 'driver';
-    distText.style.transition = 'none'; distText.style.opacity = '0';
-    resetBtn.style.display  = 'none';
-    powerWrap.style.display = 'block';
-    camCurrent.set(0, 3.5, 10); lookCurrent.set(0, 0.5, -10);
-    updateClubSelector(); updateBlobShadow(); updateStrokeCounter();
-    strokeCounterEl.style.display = 'block';
-  }
+  function hideScorecard() { document.getElementById('scorecard-overlay').style.display = 'none'; }
 
   function advanceHole() {
     hideScorecard();
     currentHoleIdx++;
     strokeCount = 0;
-    resetBallToTee();
+    buildHole(currentHoleIdx);
     updateHUD(); updateMinimapLabel();
   }
-
   function startNewRound() {
     hideScorecard();
     currentHoleIdx = 0; strokeCount = 0; scores.length = 0;
-    resetBallToTee();
+    buildHole(0);
     updateHUD(); updateMinimapLabel();
   }
-
   document.getElementById('next-hole-btn').addEventListener('click',  advanceHole);
   document.getElementById('play-again-btn').addEventListener('click', startNewRound);
 
-  // ─── Cup collision ────────────────────────────────────────────────────────────
-  function checkCupCollision() {
-    const dx = ball.position.x - HOLE.flag.x;
-    const dz = ball.position.z - HOLE.flag.z;
-    return Math.sqrt(dx*dx + dz*dz) < 0.27 && ball.position.y < HOLE.green.elevation + 0.8;
-  }
-
-  // ─── Physics ─────────────────────────────────────────────────────────────────
-  function stepPhysics(dt) {
-    if (state === 'sinking') {
-      sinkTimer += dt;
-      const progress = Math.min(1, sinkTimer / 0.45);
-      ball.position.y = sinkStartY - progress * 0.6;
-      ball.scale.setScalar(1 - progress * 0.85);
-      if (progress >= 1) {
-        ball.visible = false;
-        ball.scale.setScalar(1);
-        state = 'holed';
-        setTimeout(showScorecard, 350);
-      }
-      updateBlobShadow();
-      return;
-    }
-
-    if (state !== 'flying' && state !== 'rolling') return;
-
-    if (state === 'flying') {
-      vel.y += GRAVITY * dt;
-      ball.position.addScaledVector(vel, dt);
-      ball.rotation.x -= vel.z * dt * 3.5;
-      ball.rotation.z += vel.x * dt * 3.5;
-
-      const floorY = getGroundY(ball.position.x, ball.position.z) + BALL_RADIUS;
-      if (ball.position.y <= floorY) {
-        ball.position.y = floorY;
-        if (checkCupCollision()) { holeBall(); return; }
-        if (Math.abs(vel.y) > 1.8 && bounceCount < 3) {
-          vel.y *= -BOUNCE_RESTITUTION;
-          vel.x *=  0.80;
-          vel.z *=  0.85;
-          bounceCount++;
-        } else {
-          vel.y = 0;
-          state = 'rolling';
-        }
-      }
-    }
-
-    if (state === 'rolling') {
-      if (checkCupCollision()) { holeBall(); return; }
-      ball.position.addScaledVector(vel, dt);
-      ball.rotation.x -= vel.z * dt * 3.5;
-      ball.rotation.z += vel.x * dt * 3.5;
-      const f = Math.pow(ROLL_FRICTION, dt * 60);
-      vel.x *= f; vel.z *= f; vel.y = 0;
-      ball.position.y = getGroundY(ball.position.x, ball.position.z) + BALL_RADIUS;
-
-      if (Math.sqrt(vel.x*vel.x + vel.z*vel.z) < STOP_SPEED) {
-        vel.set(0, 0, 0);
-        state = 'stopped';
-        showStopped();
-      }
-    }
-
-    updateBlobShadow();
-  }
-
-  // ─── Camera ──────────────────────────────────────────────────────────────────
-  function updateCamera(dt, t) {
-    let targetPos, targetLook, lerpK;
-
-    if (state === 'idle' || state === 'charging') {
-      // Stay behind ball in aim direction
-      const bob = Math.sin(t * 0.4) * 0.04;
-      targetPos  = new THREE.Vector3(
-        ball.position.x - Math.sin(aimAngle) * 10,
-        ball.position.y + 3.5 + bob,
-        ball.position.z + Math.cos(aimAngle) * 10
-      );
-      targetLook = new THREE.Vector3(
-        ball.position.x + Math.sin(aimAngle) * 8,
-        ball.position.y + 0.5,
-        ball.position.z - Math.cos(aimAngle) * 8
-      );
-      lerpK = 5;
-    } else if (state === 'stopped') {
-      targetPos  = new THREE.Vector3(ball.position.x, ball.position.y + 3.2, ball.position.z + 10);
-      targetLook = new THREE.Vector3(ball.position.x, ball.position.y + 0.3, ball.position.z - 12);
-      lerpK = 1.5;
-    } else if (state === 'sinking' || state === 'holed') {
-      // Cinematic zoom on cup
-      targetPos  = new THREE.Vector3(HOLE.flag.x + 3, HOLE.green.elevation + 4, HOLE.flag.z + 7);
-      targetLook = new THREE.Vector3(HOLE.flag.x, HOLE.green.elevation + 0.3, HOLE.flag.z);
-      lerpK = 2.5;
-    } else {
-      // During flight: follow from behind based on shot direction
-      targetPos  = new THREE.Vector3(
-        ball.position.x - Math.sin(flightAimAngle) * 12,
-        ball.position.y + 4.8,
-        ball.position.z + Math.cos(flightAimAngle) * 12
-      );
-      targetLook = new THREE.Vector3(
-        ball.position.x + Math.sin(flightAimAngle) * 18,
-        ball.position.y - 0.5,
-        ball.position.z - Math.cos(flightAimAngle) * 18
-      );
-      lerpK = 4.5;
-    }
-
-    camCurrent.lerp(targetPos, dt * lerpK);
-    lookCurrent.lerp(targetLook, dt * lerpK);
-    camera.position.copy(camCurrent);
-    camera.lookAt(lookCurrent);
-  }
-
-  // ─── Power bar ───────────────────────────────────────────────────────────────
-  function updatePowerBar() {
-    const club = CLUBS[currentClub];
-    if (state === 'charging') {
-      const elapsed = performance.now() / 1000 - chargeStart;
-      powerFill.style.width = Math.min(100, elapsed / club.maxTime * 100) + '%';
-    } else if (state === 'idle') {
-      powerFill.style.width = '0%';
-    }
-  }
-
-  // ─── Aiming via held arrow keys ───────────────────────────────────────────────
-  function updateAiming(dt) {
-    if (state !== 'idle' && state !== 'charging') return;
-    const AIM_SPEED = 1.6; // rad/s
-    if (keysHeld.has('ArrowLeft'))  aimAngle -= AIM_SPEED * dt;
-    if (keysHeld.has('ArrowRight')) aimAngle += AIM_SPEED * dt;
-    aimAngle = THREE.MathUtils.clamp(aimAngle, -Math.PI * 0.6, Math.PI * 0.6);
-  }
-
   // ─── Mini-map ────────────────────────────────────────────────────────────────
-  function wmX(wx) { return (wx + 40) / 80 * 120; }
-  function wmZ(wz) { return (-wz + 8) / 156 * 160; }
+  function wmX(wx) { return (wx - HOLE.mm.xMin) / HOLE.mm.xRange * 120; }
+  function wmZ(wz) { return (HOLE.mm.zMax - wz) / HOLE.mm.zRange * 160; }
 
   function drawMinimap() {
     mmCtx.clearRect(0, 0, 120, 160);
-    mmCtx.fillStyle = 'rgba(20,40,20,0.88)';
+
+    // Background (ocean for island green, dark green otherwise)
+    mmCtx.fillStyle = HOLE.islandGreen ? 'rgba(18,55,115,0.92)' : 'rgba(20,40,20,0.88)';
     mmCtx.fillRect(0, 0, 120, 160);
 
-    const fwHW  = HOLE.fairway.width / 2;
-    const fwLX  = wmX(-fwHW), fwRX = wmX(fwHW);
-    const fwTop = wmZ(HOLE.fairway.centerZ + HOLE.fairway.length / 2);
-    const fwBot = wmZ(HOLE.fairway.centerZ - HOLE.fairway.length / 2);
-    const fwH   = fwBot - fwTop, fwW = fwRX - fwLX;
+    // Water rectangles
+    mmCtx.fillStyle = 'rgba(30,95,200,0.82)';
+    for (const wz of HOLE.waterRects) {
+      const wx0 = wmX(wz.x - wz.w/2), wz0 = wmZ(wz.z + wz.d/2);
+      const ww  = wz.w / HOLE.mm.xRange * 120, wd = wz.d / HOLE.mm.zRange * 160;
+      mmCtx.fillRect(wx0, wz0, ww, wd);
+    }
 
-    // Rough
+    // Rough flanking for straight segments
     mmCtx.fillStyle = '#2d5a2d';
-    mmCtx.fillRect(wmX(-fwHW - HOLE.rough.flanking), fwTop, wmX(-fwHW) - wmX(-fwHW - HOLE.rough.flanking), fwH);
-    mmCtx.fillRect(fwRX, fwTop, wmX(fwHW + HOLE.rough.flanking) - fwRX, fwH);
-    // Fairway
+    for (const seg of HOLE.fairwaySegs) {
+      if (seg.ry !== 0) continue; // skip dogleg segs (handled separately)
+      const fw = seg.w / 2, rf = HOLE.rough.flanking;
+      if (rf <= 0) continue;
+      const segTop = wmZ(seg.z + seg.len/2), segH = seg.len / HOLE.mm.zRange * 160;
+      const lx = wmX(seg.x - fw - rf), rw = wmX(seg.x + fw) - wmX(seg.x + fw - rf);
+      mmCtx.fillRect(wmX(seg.x - fw - rf), segTop, wmX(seg.x - fw) - wmX(seg.x - fw - rf), segH);
+      mmCtx.fillRect(wmX(seg.x + fw),      segTop, wmX(seg.x + fw + rf) - wmX(seg.x + fw), segH);
+    }
+
+    // Fairway segments
     mmCtx.fillStyle = '#4a9e4a';
-    mmCtx.fillRect(fwLX, fwTop, fwW, fwH);
-    // Green
-    mmCtx.beginPath();
-    mmCtx.arc(wmX(HOLE.green.x), wmZ(HOLE.green.z), HOLE.green.radius / 80 * 120, 0, Math.PI*2);
+    for (const seg of HOLE.fairwaySegs) {
+      const mcx = wmX(seg.x), mcz = wmZ(seg.z);
+      const mw  = seg.w   / HOLE.mm.xRange * 120;
+      const ml  = seg.len / HOLE.mm.zRange * 160;
+      mmCtx.save();
+      mmCtx.translate(mcx, mcz);
+      mmCtx.rotate(-seg.ry);  // minimap: CCW world Y rot = CCW canvas rot
+      mmCtx.fillRect(-mw/2, -ml/2, mw, ml);
+      mmCtx.restore();
+    }
+
+    // Bunkers
+    mmCtx.fillStyle = '#d4b870';
+    for (const b of HOLE.bunkers) {
+      const brx = b.rx / HOLE.mm.xRange * 120, brz = b.rz / HOLE.mm.zRange * 160;
+      mmCtx.save();
+      mmCtx.translate(wmX(b.x), wmZ(b.z));
+      mmCtx.scale(1, brz / brx);
+      mmCtx.beginPath(); mmCtx.arc(0, 0, brx, 0, Math.PI*2); mmCtx.fill();
+      mmCtx.restore();
+    }
+
+    // Green circle
+    const grx = HOLE.green.radius / HOLE.mm.xRange * 120;
+    const grz = HOLE.green.radius / HOLE.mm.zRange * 160;
+    mmCtx.save();
+    mmCtx.translate(wmX(HOLE.green.x), wmZ(HOLE.green.z));
+    mmCtx.scale(1, grz / grx);
+    mmCtx.beginPath(); mmCtx.arc(0, 0, grx, 0, Math.PI*2);
     mmCtx.fillStyle = '#5dbf5d'; mmCtx.fill();
-    // Tee
+    mmCtx.restore();
+
+    // Tee marker
     mmCtx.fillStyle = '#7de07d';
-    mmCtx.fillRect(wmX(-1.5), wmZ(1.5), 3, 3);
+    mmCtx.fillRect(wmX(HOLE.tee.x) - 2, wmZ(HOLE.tee.z) - 2, 4, 4);
+
     // Flag
     mmCtx.beginPath();
     mmCtx.arc(wmX(HOLE.flag.x), wmZ(HOLE.flag.z), 2, 0, Math.PI*2);
     mmCtx.fillStyle = '#ffffff'; mmCtx.fill();
 
-    // Aim direction + predicted landing (only in idle/charging)
+    // Aim prediction line (idle/charging)
     if (state === 'idle' || state === 'charging') {
-      const bx   = wmX(ball.position.x), bz = wmZ(ball.position.z);
       const pts  = getTrajectoryPoints();
       const land = pts[pts.length - 1];
-      const ex   = wmX(land[0]), ez = wmZ(land[2]);
-
-      // Aim line (dashed)
+      const bx   = wmX(ball.position.x), bz = wmZ(ball.position.z);
+      const ex   = wmX(land[0]),         ez = wmZ(land[2]);
       mmCtx.save();
       mmCtx.setLineDash([3, 3]);
-      mmCtx.strokeStyle = 'rgba(255,218,40,0.85)';
-      mmCtx.lineWidth   = 1.5;
-      mmCtx.beginPath(); mmCtx.moveTo(bx, bz); mmCtx.lineTo(ex, ez);
-      mmCtx.stroke();
+      mmCtx.strokeStyle = 'rgba(255,218,40,0.85)'; mmCtx.lineWidth = 1.5;
+      mmCtx.beginPath(); mmCtx.moveTo(bx, bz); mmCtx.lineTo(ex, ez); mmCtx.stroke();
       mmCtx.restore();
-
-      // Landing prediction dot
       mmCtx.beginPath();
       mmCtx.arc(ex, ez, 3, 0, Math.PI*2);
       mmCtx.fillStyle = 'rgba(255,218,40,0.80)'; mmCtx.fill();
     }
 
-    // Ball shadow
+    // Ball dot
     mmCtx.beginPath();
     mmCtx.arc(wmX(ball.position.x)+1, wmZ(ball.position.z)+1, 3.5, 0, Math.PI*2);
     mmCtx.fillStyle = 'rgba(0,0,0,0.45)'; mmCtx.fill();
-    // Ball
     mmCtx.beginPath();
     mmCtx.arc(wmX(ball.position.x), wmZ(ball.position.z), 4, 0, Math.PI*2);
     mmCtx.fillStyle = 'rgba(255,255,255,0.95)'; mmCtx.fill();
-    // Labels
-    mmCtx.fillStyle = 'rgba(255,255,255,0.4)';
-    mmCtx.font = '8px Georgia';
-    mmCtx.fillText('T', wmX(2.5), wmZ(-2));
+
+    // T / G labels
+    mmCtx.fillStyle = 'rgba(255,255,255,0.38)'; mmCtx.font = '8px Georgia';
+    mmCtx.fillText('T', wmX(HOLE.tee.x + 2.5), wmZ(HOLE.tee.z - 2));
     mmCtx.fillText('G', wmX(HOLE.green.x + HOLE.green.radius + 0.5), wmZ(HOLE.green.z));
   }
 
@@ -1262,19 +1500,31 @@
     const dt = Math.min(clock.getDelta(), 0.05);
     const t  = clock.elapsedTime;
 
-    updateAiming(dt);
-    stepPhysics(dt);
-    updateCamera(dt, t);
-    updatePowerBar();
-    updateAimVisuals();
+    if (state === 'preview') {
+      previewT += dt / PREVIEW_DURATION;
+      if (previewT >= 1) endPreview();
+      else               updatePreviewCamera(previewT);
+    } else {
+      updateAiming(dt);
+      stepPhysics(dt);
+      updateCamera(dt, t);
+      updatePowerBar();
+      updateAimVisuals();
+    }
     updateParticles(dt);
 
-    flag.rotation.y = Math.sin(t * 2.5) * 0.15;
-    flag.position.x = HOLE.flag.x + 0.6 + Math.sin(t * 2.5) * 0.08;
+    if (flagMesh) {
+      flagMesh.rotation.y = Math.sin(t * 2.5) * 0.15;
+      flagMesh.position.x = HOLE.flag.x + 0.6 + Math.sin(t * 2.5) * 0.08;
+    }
 
     drawMinimap();
     renderer.render(scene, camera);
   }
+
+  // ─── Kick off ────────────────────────────────────────────────────────────────
+  buildHole(0);
+  updateHUD();
   animate();
   </script>
 </body>
